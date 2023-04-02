@@ -1,21 +1,25 @@
-{
-    "Items": [
-      {
-        "Identifier": "Axt",
-        "Weight":5.7,
+[
+    {
+        "Identifier": "Axe",
+        "Type": "Axe",
+        "Weight": 5.7,
         "Tags": [
-          "TH", "Technische Hilfe", "Brand"
+            "TH",
+            "Technical support",
+            "Fire"
         ]
-      },
-      {
-        "Identifier": "Schlauch C15",
-        "Weight": "4.5",
-        "AdditionalInfo":[
-          {
-            "Länge":25
-          }
+    },
+    {
+        "Identifier": "Hose C15",
+        "Type": "Hose",
+        "Weight": 4.5,
+        "AdditionalInfo": [
+            {
+                "Length": 25
+            }
         ],
-        "Tags":"Brand"
-      }
-    ]
-  }
+        "Tags": [
+            "Fire"
+        ]
+    }
+]

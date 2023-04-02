@@ -1,0 +1,31 @@
+﻿{
+    "FireTruckIdentifier": "01/01/01",
+    "Locations": [
+        {
+            "Location": "G1",
+            "Items": [
+                {
+                    "Identifer": "Axe 25",
+                    "Quantity": 5
+                },
+                {
+                    "Identifer": "Hose C25",
+                    "Quantity": 12
+                }
+            ]
+        },
+        {
+            "Location": "G2",
+            "Items": [
+                {
+                    "Identifer": "TestItem2",
+                    "Quantity": 1
+                },
+                {
+                    "Identifer": "Hose C25",
+                    "Quantitify": 10
+                }
+            ]
+        }
+    ]
+}

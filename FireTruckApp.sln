@@ -1,0 +1,46 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FireTruckApp", "FireTruckApp\FireTruckApp.csproj", "{09612B5A-4A81-4C07-B641-59A33CD2C705}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FireTruckApp.DataLoader", "FireTruckApp.DataLoader\FireTruckApp.DataLoader.csproj", "{D52194B7-FD3E-4800-B340-036486FE85DE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FireTruckApp.DataLoaderTest", "FireTruckApp.DataLoaderTest\FireTruckApp.DataLoaderTest.csproj", "{E853B472-5989-4524-8E56-DFB44BA7FA20}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FireTruckApp.DataModel", "FireTruckApp.DataModel\FireTruckApp.DataModel.csproj", "{847968C1-8DB0-4AAA-BEAA-AE0FE6092B9F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BaseLibrary", "BaseLibrary\BaseLibrary.csproj", "{D377FD3C-5516-4B2B-AC5C-85E18A323CB3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{09612B5A-4A81-4C07-B641-59A33CD2C705}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{09612B5A-4A81-4C07-B641-59A33CD2C705}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{09612B5A-4A81-4C07-B641-59A33CD2C705}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{09612B5A-4A81-4C07-B641-59A33CD2C705}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D52194B7-FD3E-4800-B340-036486FE85DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D52194B7-FD3E-4800-B340-036486FE85DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D52194B7-FD3E-4800-B340-036486FE85DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D52194B7-FD3E-4800-B340-036486FE85DE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E853B472-5989-4524-8E56-DFB44BA7FA20}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E853B472-5989-4524-8E56-DFB44BA7FA20}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E853B472-5989-4524-8E56-DFB44BA7FA20}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E853B472-5989-4524-8E56-DFB44BA7FA20}.Release|Any CPU.Build.0 = Release|Any CPU
+		{847968C1-8DB0-4AAA-BEAA-AE0FE6092B9F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{847968C1-8DB0-4AAA-BEAA-AE0FE6092B9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{847968C1-8DB0-4AAA-BEAA-AE0FE6092B9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{847968C1-8DB0-4AAA-BEAA-AE0FE6092B9F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D377FD3C-5516-4B2B-AC5C-85E18A323CB3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D377FD3C-5516-4B2B-AC5C-85E18A323CB3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D377FD3C-5516-4B2B-AC5C-85E18A323CB3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D377FD3C-5516-4B2B-AC5C-85E18A323CB3}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
