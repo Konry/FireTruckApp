@@ -1,0 +1,21 @@
+{
+    "Items": [
+      {
+        "Identifier": "Axt",
+        "Weight":5.7,
+        "Tags": [
+          "TH", "Technische Hilfe", "Brand"
+        ]
+      },
+      {
+        "Identifier": "Schlauch C15",
+        "Weight": "4.5",
+        "AdditionalInfo":[
+          {
+            "Länge":25
+          }
+        ],
+        "Tags":"Brand"
+      }
+    ]
+  }
