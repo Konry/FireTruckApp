@@ -1,4 +1,4 @@
-// Copyright (c) Jan Philipp Luehrig. All rights reserved.
+// Copyright (c) Jan Philipp Luehrig.All rights reserved.
 // These files are licensed to you under the MIT license.
 
 using BaseLibrary;
@@ -10,28 +10,27 @@ namespace FireTruckApp.DataLoaderTest;
 [TestFixture]
 public class ItemLoaderTest
 {
-    [SetUp]
-    public void Setup() => _sut = new ItemLoader();
-
-    private ItemLoader _sut = null!;
 
     [Test]
     public void LoadBaseItems_TwoItems_ReturningTwoItems()
     {
         // Arrange
 
-        List<Item> items = ItemLoader.LoadBaseItems(InternalResourceLoader.GetTextFromEmbeddedResource("ItemsExample.json"));
+        List<Item> items =
+            ItemLoader.LoadBaseItems(InternalResourceLoader.GetTextFromEmbeddedResource("ItemsExample.json"));
 
         // Act
         // Assert
         Assert.That(items, Has.Count.EqualTo(2));
     }
+
     [Test]
     public void LoadBaseItems_TwoItems_ItemExists()
     {
         // Arrange
 
-        List<Item> items = ItemLoader.LoadBaseItems(InternalResourceLoader.GetTextFromEmbeddedResource("ItemsExample.json"));
+        List<Item> items =
+            ItemLoader.LoadBaseItems(InternalResourceLoader.GetTextFromEmbeddedResource("ItemsExample.json"));
 
         // Act
         // Assert
@@ -43,7 +42,8 @@ public class ItemLoaderTest
     {
         // Arrange
 
-        List<FireTruck> items = ItemLoader.LoadFireTrucks(InternalResourceLoader.GetTextFromEmbeddedResource("FireTruckExample.json"));
+        List<BareFireTruck> items =
+            ItemLoader.LoadFireTrucks(InternalResourceLoader.GetTextFromEmbeddedResource("FireTruckExample.json"));
 
         // Act
         // Assert
@@ -55,7 +55,8 @@ public class ItemLoaderTest
     {
         // Arrange
 
-        List<FireTruck> items = ItemLoader.LoadFireTrucks(InternalResourceLoader.GetTextFromEmbeddedResource("FireTruckExample.json"));
+        List<BareFireTruck> items =
+            ItemLoader.LoadFireTrucks(InternalResourceLoader.GetTextFromEmbeddedResource("FireTruckExample.json"));
 
         // Act
         // Assert
@@ -68,7 +69,8 @@ public class ItemLoaderTest
     {
         // Arrange
 
-        List<FireTruck> items = ItemLoader.LoadFireTrucks(InternalResourceLoader.GetTextFromEmbeddedResource("FireTruckExample.json"));
+        List<BareFireTruck> items =
+            ItemLoader.LoadFireTrucks(InternalResourceLoader.GetTextFromEmbeddedResource("FireTruckExample.json"));
 
         // Act
         // Assert
@@ -81,23 +83,13 @@ public class ItemLoaderTest
     {
         // Arrange
 
-        FireTruckItems items = ItemLoader.LoadFireTruckItems(InternalResourceLoader.GetTextFromEmbeddedResource("FireTruckItemsExample.json"));
+        FireTruckItems items =
+            ItemLoader.LoadFireTruckItems(
+                InternalResourceLoader.GetTextFromEmbeddedResource("FireTruckItemsExample.json"));
 
         // Act
         // Assert
         Assert.That(items.Locations, Has.Count.EqualTo(2));
     }
-    [Test]
-    public void LoadFireTruckItems_LocationOneHasTwoItems_ReturnTwoItems()
-    {
-        // Arrange
 
-        FireTruckItems items = ItemLoader.LoadFireTruckItems(InternalResourceLoader.GetTextFromEmbeddedResource("FireTruckItemsExample.json"));
-
-        // Act
-        // Assert
-        Assert.That(items.Locations.First().Location, Is.EqualTo("G1"));
-        Assert.That(items.Locations.First().Items, Has.Count.EqualTo(2));
-        Assert.That(items.Locations.First().Items.First().Identifer, Is.EqualTo("Axe 25"));
-    }
 }

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Jan Philipp Luehrig. All rights reserved.
+﻿// Copyright (c) Jan Philipp Luehrig.All rights reserved.
 // These files are licensed to you under the MIT license.
 
 namespace FireTruckApp.DataModel;
@@ -16,4 +16,7 @@ public class Item
     public List<string> AlternateWording { get; set; }
 
     public List<(string Name, string Info)> AdditionalInfo { get; set; }
+
+    public string Description { get; set; }
+    public List<string> YoutubeLinks { get; set; }
 }

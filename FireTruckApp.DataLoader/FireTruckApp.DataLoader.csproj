@@ -7,11 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FireTruckApp.DataModel\FireTruckApp.DataModel.csproj"/>
+    <ProjectReference Include="..\FireTruckApp.DataModel\FireTruckApp.DataModel.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3"/>
+    <PackageReference Include="FastExcel" Version="3.0.13" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
 
 </Project>

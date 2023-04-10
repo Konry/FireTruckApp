@@ -1,0 +1,24 @@
+[
+  {
+    "FireTruckIdentifier": "Hello",
+    "Locations": "tt"
+  },
+  {
+    "FireTruckIdentifier": "this",
+    "Locations": [
+      {
+        "Location": "G1",
+        "Items": [
+          {
+            "Identifer": "Axt",
+            "Quantity": "5"
+          },
+          {
+            "Identifer": "Hose",
+            "Quantity": "20"
+          }
+        ]
+      }
+    ]
+  }
+]

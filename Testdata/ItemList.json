@@ -1,0 +1,38 @@
+[
+   {
+      "Identifier":"Axt",
+      "Type":"Axt",
+      "Weight":"55.6",
+      "Tags":[
+         "Brand"
+      ],
+      "AlternateWording":[
+         
+      ],
+      "AdditionalInfo":[
+         
+      ]
+   },
+   {
+      "Identifier":"Hose",
+      "Type":"Hose",
+      "Weight":"15.6",
+      "Tags":[
+         "Brand",
+         "TH"
+      ],
+      "AlternateWording":[
+         "SChlauch"
+      ],
+      "AdditionalInfo":[
+         {
+            "Name":"Length",
+            "Info":152.2
+         },
+         {
+            "Name":"Farbe",
+            "Info":"Rot"
+         }
+      ]
+   }
+]
