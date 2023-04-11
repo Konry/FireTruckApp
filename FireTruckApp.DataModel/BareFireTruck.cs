@@ -21,7 +21,7 @@ public class FireTruck : BareFireTruck
     }
 }
 
-public class Location
+public class Location : FireTruckLocation
 {
     public string Identifier { get; set; }
     public List<LocationItem> Items { get; set; }

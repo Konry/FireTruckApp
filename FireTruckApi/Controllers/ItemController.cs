@@ -1,6 +1,7 @@
 // Copyright (c) Jan Philipp Luehrig.All rights reserved.
 // These files are licensed to you under the MIT license.
 
+using FireTruckApi.DataHandling;
 using FireTruckApp.DataModel;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,6 +11,8 @@ namespace FireTruckApi.Controllers;
 [Route("[controller]")]
 public class ItemController : ControllerBase
 {
+    private readonly IDataStorage _storage;
+
     private static readonly List<Item> TestData = new()
     {
         new Item
@@ -34,10 +37,14 @@ public class ItemController : ControllerBase
         }
     };
 
+    public ItemController(IDataStorage storage)
+    {
+        _storage = storage;
+    }
     [HttpGet(Name = "GetItem")]
     public Item Get(string itemIdentifier)
     {
-        return TestData.Where(x => x.Identifier == itemIdentifier).FirstOrDefault();
+        return _storage.Items.First(x => x.Identifier == itemIdentifier);
     }
 
 }

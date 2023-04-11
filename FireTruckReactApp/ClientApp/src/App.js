@@ -40,12 +40,13 @@ function App() {
     const handleClickLocation = async (locationObject) => {
         console.log('Location data:', locationObject);
         setSelectedLocation(locationObject);
-        setLocationItemsData(await fetchLocationItemsData(locationObject.identifier));
+        setLocationItemsData(await fetchLocationItemsData(selectedTruck.identifier, locationObject.identifier));
     };
 
-    async function fetchLocationItemsData(identifier) {
+    async function fetchLocationItemsData(truck, identifier) {
+        console.info("fetchLocationItemsData " + truck + " " + identifier)
         try {
-            const response = await fetch(`https://localhost:7258/FireTruckItems?location=${identifier}`);
+            const response = await fetch(`${process.env.REACT_APP_API_HOST}FireTruckItems?firetruck=${truck}&location=${identifier}`);
             return await response.json();
         } catch (error) {
             toast.error(`Failed to fetch location items for truck ${identifier} data: ${error.message}`);
@@ -65,6 +66,7 @@ function App() {
 
     const fetchBasicData = async () => {
         console.log('fetchBasicData:');
+        console.info(`TEST ${process.env.REACT_APP_API_HOST}`)
         const data = await fetchFireTruckData();
         if (data) {
             setFireTruckData(data);
@@ -110,6 +112,7 @@ function App() {
     const renderLocationItems = (id) => {
 
         console.log(`render location for location ${id}`)
+        locationItemsData.forEach(x => console.warn(x))
         return locationItemsData.map((item) => (
             <LocationItemsCard
                 key={item.identifier}
@@ -127,7 +130,7 @@ function App() {
     };
     async function fetchLocationData(fireTruck) {
         try {
-            const response = await fetch(`https://localhost:7258/FireTruckLocation?fireTruck=${fireTruck}`);
+            const response = await fetch(`${process.env.REACT_APP_API_HOST}FireTruckLocation?fireTruck=${fireTruck}`);
             return await response.json();
         } catch (error) {
             toast.error(`Failed to fetch location truck data: ${error.message}`);
@@ -138,7 +141,7 @@ function App() {
 
     async function fetchFireTruckData() {
         try {
-            const response = await fetch('https://localhost:7258/FireTruck');
+            const response = await fetch(`${process.env.REACT_APP_API_HOST}FireTruck`);
             return await response.json();
         } catch (error) {
             toast.error(`Failed to fetch fire truck data: ${error.message}`);
@@ -148,11 +151,11 @@ function App() {
 
     const renderLocations = (id) => {
         console.log(`render location for truck ${id}`)
-        console.log(locationData)
         return locationData.map((item) => (
             <LocationCard
                 key={item.identifier}
                 locationData={item}
+                truckData={selectedTruck}
                 className={`card ${selectedLocation === item.identifier ? 'selected' : ''}`}
                 selected={selectedLocation.identifier === item.identifier}
                 handleClickLocation={() =>

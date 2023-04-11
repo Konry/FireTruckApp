@@ -1,6 +1,7 @@
 // Copyright (c) Jan Philipp Luehrig.All rights reserved.
 // These files are licensed to you under the MIT license.
 
+using FireTruckApi.DataHandling;
 using FireTruckApp.DataModel;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,63 +11,17 @@ namespace FireTruckApi.Controllers;
 [Route("[controller]")]
 public class FireTruckItemsController : ControllerBase
 {
-    private static readonly List<LocationItem> TestData = new()
+    private readonly IDataStorage _dataStorage;
+
+    public FireTruckItemsController(IDataStorage dataStorage)
     {
-        new LocationItem
-        {
-            Identifier = "Axt",
-            Quantity = 1
-        },
-        new LocationItem
-        {
-            Identifier = "Schlauch",
-            Quantity = 5
-        },
-        new LocationItem
-        {
-            Identifier = "Strahlrohr B",
-            Quantity = 5
-        },
-        new LocationItem
-        {
-            Identifier = "Schuttmulde",
-            Quantity = 2
-        }
-    };
-    private static readonly List<LocationItem> TestDataG1 = new()
-    {
-        new LocationItem
-        {
-            Identifier = "Axe",
-            Quantity = 1
-        },
-        new LocationItem
-        {
-            Identifier = "Hose",
-            Quantity = 5
-        },
-        new LocationItem
-        {
-            Identifier = "Strahlrohr C",
-            Quantity = 5
-        },
-        new LocationItem
-        {
-            Identifier = "Schuttmulde",
-            Quantity = 2
-        }
-    };
+        _dataStorage = dataStorage;
+    }
 
     [HttpGet(Name = "GetFireTruckItems")]
-    public IEnumerable<LocationItem> Get(string location)
+    public IEnumerable<LocationItem> Get(string fireTruck, string location)
     {
-        switch (location)
-        {
-            case "G1":
-                return TestDataG1;
-            default:
-                return TestData;
-        }
+        return _dataStorage.FireTrucks.First(x => x.Identifier == fireTruck).Locations.First(y => y.Identifier == location).Items;
     }
 
 }

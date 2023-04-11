@@ -1,6 +1,7 @@
 // Copyright (c) Jan Philipp Luehrig.All rights reserved.
 // These files are licensed to you under the MIT license.
 
+using System.Net;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using FastExcel;
@@ -12,14 +13,15 @@ namespace FireTruckApp.DataLoader;
 
 public class ExcelDataLoader
 {
-    public void LoadXLSXFile(string file, bool tabPerTruck)
+    public (List<Item> Items, List<FireTruck> Trucks) LoadXLSXFile(string file, bool tabPerTruck = true)
     {
         FileInfo inputFile = new(file);
 
         // Create an instance of Fast Excel
         using FastExcel.FastExcel fastExcel = new(inputFile, true);
 
-        List<BareFireTruck> fireTrucks = new();
+        List<FireTruck> fireTrucks = new();
+        List<Item> items = new ();
         foreach (Worksheet? worksheet in fastExcel.Worksheets)
         {
             Console.WriteLine("Worksheet Name:{0}, Index:{1}", worksheet.Name, worksheet.Index);
@@ -34,6 +36,10 @@ public class ExcelDataLoader
                     FireTruck truck = HandleFireTruck(worksheet, ref fireTrucks);
                     fireTrucks.Add(truck);
                 }
+                catch (FireTruckDataNotFoundException dtdnfou)
+                {
+                    Console.WriteLine($"Skip worksheet {worksheet.Name}, {dtdnfou.Message}");
+                }
                 catch (TruckAlreadyExistingException tae)
                 {
                     Console.WriteLine("Truck is already existing, skip {TruckIdentifier}", matches.First().Value);
@@ -46,9 +52,11 @@ public class ExcelDataLoader
             }
             else
             {
-                HandleItemList(worksheet);
+                items = HandleItemList(worksheet);
             }
         }
+
+        return (items, fireTrucks);
     }
 
 
@@ -119,7 +127,7 @@ public class ExcelDataLoader
 
     private static readonly char[] s_splitSeparators = new List<char> {',', ';', '\n', '\r'}.ToArray();
 
-    internal FireTruck HandleFireTruck(Worksheet worksheet, ref List<BareFireTruck> fireTrucks)
+    internal FireTruck HandleFireTruck(Worksheet worksheet, ref List<FireTruck> fireTrucks)
     {
         Console.WriteLine("HandleFireTruck");
         Console.WriteLine(worksheet.Name);
@@ -139,13 +147,18 @@ public class ExcelDataLoader
             worksheet.Read();
             Row[] rows = worksheet.Rows.ToArray();
 
+            if (rows.Length < 2)
+            {
+                throw new FireTruckDataNotFoundException(
+                    $"There are no data for a firetruck in worksheet {worksheet.Name}");
+            }
             Row row = rows[1]; // Row 1 is containing all information about the car
+
             if (!row.Cells.Any())
             {
                 throw new FireTruckDataNotFoundException(
                     $"There are no data for a firetruck in the row {row.RowNumber}");
             }
-
             foreach (Cell cell in row.Cells)
             {
                 switch (cell.ColumnNumber)

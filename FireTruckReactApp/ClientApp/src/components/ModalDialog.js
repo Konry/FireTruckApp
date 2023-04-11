@@ -6,7 +6,7 @@ function ModalContent(props) {
 
     return (
         <div>
-            <h2>{data.name}</h2>
+            <h2>{data.Identifier}</h2>
             <p>{data.email}</p>
             <p>{data.phone}</p>
         </div>

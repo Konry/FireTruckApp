@@ -34,7 +34,7 @@ public class ExcelDataLoaderTest
         var emptyRows = new List<Row>();
         worksheet.Rows = emptyRows;
         var sut = new ExcelDataLoader();
-        var list = new List<BareFireTruck>
+        var list = new List<FireTruck>
         {
             new()
             {
@@ -57,7 +57,7 @@ public class ExcelDataLoaderTest
         worksheet.Rows = emptyRows;
 
         var sut = new ExcelDataLoader();
-        var list = new List<BareFireTruck>
+        var list = new List<FireTruck>
         {
             new()
             {
@@ -82,7 +82,7 @@ public class ExcelDataLoaderTest
         worksheet.Rows = correctFilledRows;
 
         var sut = new ExcelDataLoader();
-        var list = new List<BareFireTruck>();
+        var list = new List<FireTruck>();
         // Act
 
         // Assert
@@ -101,7 +101,7 @@ public class ExcelDataLoaderTest
         worksheet.Rows = correctFilledRows;
 
         var sut = new ExcelDataLoader();
-        var list = new List<BareFireTruck>();
+        var list = new List<FireTruck>();
         // Act
         var result = sut.HandleFireTruck(worksheet, ref list);
 
