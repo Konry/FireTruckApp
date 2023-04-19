@@ -61,6 +61,8 @@ steps:
     organization: '$(sonarcloud_org)'
     scannerMode: 'MSBuild'
     projectKey: '$(sonarcloud_key)'
+    extraProperties: |
+      sonar.cs.vscoveragexml.reportsPaths=$(Build.SourcesDirectory)/coverlet/reports/Cobertura.xml
     #configMode: 'file'
     #scannerMode: 'CLI'
 
