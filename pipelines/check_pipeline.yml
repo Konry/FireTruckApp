@@ -22,6 +22,25 @@ variables:
 steps:
 
 #-------------------------------
+# Preparations
+#-------------------------------
+
+ 
+- task: UseDotNet@2
+  displayName: Install Dotnet SDK 7.x
+  inputs:
+    packageType: 'sdk'
+    version: '7.x'
+    includePreviewVersions: true
+ 
+- task: NuGetToolInstaller@1
+  displayName: Install Nuget
+  inputs:
+    versionSpec: '6.5.0'
+    checkLatest: true
+
+
+#-------------------------------
 # Build libraries
 #-------------------------------
 
@@ -35,6 +54,16 @@ steps:
     verbosityRestore: 'Normal'
     arguments: '--configuration $(buildConfiguration)'
 
+- task: SonarCloudPrepare@1
+  displayName: Prepare Sonarcloud
+  inputs:
+    SonarCloud: '$(sonarcloud_project)'
+    organization: '$(sonarcloud_org)'
+    scannerMode: 'MSBuild'
+    projectKey: '$(sonarcloud_key)'
+    #configMode: 'file'
+    #scannerMode: 'CLI'
+
 - task: DotNetCoreCLI@2
   displayName: Dotnet Build
   inputs:
@@ -46,6 +75,9 @@ steps:
 # Check code styles 
 #-------------------------------
 
+- task: SonarCloudAnalyze@1
+  displayName: Run static code analysis
+
 #-------------------------------
 # Run tests
 #-------------------------------
@@ -55,7 +87,8 @@ steps:
   inputs:
     command: test
     projects: '**/*Test.csproj'
-    arguments: '--configuration $(BuildConfiguration) --collect:"XPlat Code Coverage" '
+    arguments: '--configuration $(BuildConfiguration) --collect:"XPlat Code Coverage" --filter TestCategory=!~DEV'
+    
 
 - script: 'dotnet tool install --global dotnet-reportgenerator-globaltool --version 5.1.19'  
   displayName: 'Install ReportGenerator Tool'
@@ -69,7 +102,12 @@ steps:
   inputs:
     codeCoverageTool: Cobertura  
     summaryFileLocation: '$(Build.SourcesDirectory)/coverlet/reports/Cobertura.xml'  
-    
+
+- task: SonarCloudPublish@1
+  displayName: Publish Sonarcloud
+  inputs:
+    pollingTimeoutSec: '300'
+
 #-------------------------------
 # Create executable package 
 #-------------------------------

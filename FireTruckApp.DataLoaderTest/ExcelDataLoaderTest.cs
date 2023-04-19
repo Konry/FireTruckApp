@@ -21,6 +21,8 @@ public class ExcelDataLoaderTest
         // Act
         sut.LoadXLSXFile(@"E:\Onedrive\Feuerwehr\Fahrzeuge + Ausstattung\Ausstattung.xlsx",tabPerTruck: true);
         // Assert
+
+        Assert.Fail();
     }
 
     [Test]
