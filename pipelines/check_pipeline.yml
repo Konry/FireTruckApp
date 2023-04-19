@@ -117,6 +117,12 @@ steps:
 
 - task: PublishBuildArtifacts@1
   inputs:
+    PathtoPublish: '$(Build.SourcesDirectory)'
+    ArtifactName: 'BuildFireApiSources'
+    publishLocation: 'Container'
+
+- task: PublishBuildArtifacts@1
+  inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    ArtifactName: 'BuildFireApi'
+    ArtifactName: 'BuildFireApiArtifacts'
     publishLocation: 'Container'
