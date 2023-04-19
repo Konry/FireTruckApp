@@ -1,4 +1,4 @@
-﻿// Copyright (c) Jan Philipp Luehrig.All rights reserved.
+﻿// Copyright (c) Jan Philipp Luehrig. All rights reserved.
 // These files are licensed to you under the MIT license.
 
 using System.Runtime.Serialization;

@@ -9,6 +9,7 @@
     min-width: 100%;
     scroll-snap-type: x mandatory;
 }
+
 .scrollable-vertical-list {
     justify-content: center;
     min-width: 100%;

@@ -1,4 +1,4 @@
-// Copyright (c) Jan Philipp Luehrig.All rights reserved.
+// Copyright (c) Jan Philipp Luehrig. All rights reserved.
 // These files are licensed to you under the MIT license.
 
 using FireTruckApi.DataHandling;
@@ -13,38 +13,11 @@ public class ItemController : ControllerBase
 {
     private readonly IDataStorage _storage;
 
-    private static readonly List<Item> TestData = new()
-    {
-        new Item
-        {
-            Identifier = "Axt",
-            Weight = 1
-        },
-        new Item
-        {
-            Identifier = "Schlauch",
-            Weight = 5
-        },
-        new Item
-        {
-            Identifier = "Strahlrohr B",
-            Weight = 5
-        },
-        new Item
-        {
-            Identifier = "Schuttmulde",
-            Weight = 2
-        }
-    };
-
     public ItemController(IDataStorage storage)
     {
         _storage = storage;
     }
-    [HttpGet(Name = "GetItem")]
-    public Item Get(string itemIdentifier)
-    {
-        return _storage.Items.First(x => x.Identifier == itemIdentifier);
-    }
 
+    [HttpGet(Name = "GetItem")]
+    public Item Get(string itemIdentifier) => _storage.Items.First(x => x.Identifier == itemIdentifier);
 }

@@ -1,3 +1,6 @@
+// Copyright (c) Jan Philipp Luehrig. All rights reserved.
+// These files are licensed to you under the MIT license.
+
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -18,8 +21,5 @@ public class ErrorModel : PageModel
 
     public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
 
-    public void OnGet()
-    {
-        RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier;
-    }
+    public void OnGet() => RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier;
 }

@@ -1,4 +1,4 @@
-// Copyright (c) Jan Philipp Luehrig.All rights reserved.
+// Copyright (c) Jan Philipp Luehrig. All rights reserved.
 // These files are licensed to you under the MIT license.
 
 using BaseLibrary;
@@ -10,7 +10,6 @@ namespace FireTruckApp.DataLoaderTest;
 [TestFixture]
 public class ItemLoaderTest
 {
-
     [Test]
     public void LoadBaseItems_TwoItems_ReturningTwoItems()
     {
@@ -91,5 +90,4 @@ public class ItemLoaderTest
         // Assert
         Assert.That(items.Locations, Has.Count.EqualTo(2));
     }
-
 }

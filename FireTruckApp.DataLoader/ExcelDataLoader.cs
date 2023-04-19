@@ -1,19 +1,32 @@
-// Copyright (c) Jan Philipp Luehrig.All rights reserved.
+// Copyright (c) Jan Philipp Luehrig. All rights reserved.
 // These files are licensed to you under the MIT license.
 
-using System.Net;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using FastExcel;
 using FireTruckApp.DataModel;
+using Microsoft.Extensions.Logging;
+using static System.Text.RegularExpressions.Regex;
 
 [assembly: InternalsVisibleTo("FireTruckApp.DataLoaderTest")]
 
 namespace FireTruckApp.DataLoader;
 
-public class ExcelDataLoader
+public interface IExcelDataLoader
 {
-    public (List<Item> Items, List<FireTruck> Trucks) LoadXLSXFile(string file, bool tabPerTruck = true)
+    (List<Item> Items, List<FireTruck> Trucks) LoadXlsxFile(string file, bool tabPerTruck = true);
+}
+
+public class ExcelDataLoader : IExcelDataLoader
+{
+    private readonly ILogger<ExcelDataLoader> _logger;
+    private static readonly char[] s_splitSeparators = new List<char> {',', ';', '\n', '\r'}.ToArray();
+
+    public ExcelDataLoader(ILogger<ExcelDataLoader> logger)
+    {
+        _logger = logger;
+    }
+    public (List<Item> Items, List<FireTruck> Trucks) LoadXlsxFile(string file, bool tabPerTruck = true)
     {
         FileInfo inputFile = new(file);
 
@@ -21,13 +34,13 @@ public class ExcelDataLoader
         using FastExcel.FastExcel fastExcel = new(inputFile, true);
 
         List<FireTruck> fireTrucks = new();
-        List<Item> items = new ();
+        List<Item> items = new();
         foreach (Worksheet? worksheet in fastExcel.Worksheets)
         {
-            Console.WriteLine("Worksheet Name:{0}, Index:{1}", worksheet.Name, worksheet.Index);
-            string fireTruckPattern = @"(\d+\W\d+\W\d+)";
+            _logger.LogDebug("Worksheet Name:{Name}, Index:{TableIndex}", worksheet.Name, worksheet.Index);
+            const string fireTruckPattern = @"(\d+\W\d+\W\d+)";
 
-            MatchCollection matches = Regex.Matches(worksheet.Name, fireTruckPattern);
+            MatchCollection matches = Matches(worksheet.Name, fireTruckPattern, RegexOptions.None, new TimeSpan(0,0,3));
             if (matches.Count > 0)
             {
                 // Fire truck handling
@@ -38,15 +51,15 @@ public class ExcelDataLoader
                 }
                 catch (FireTruckDataNotFoundException dtdnfou)
                 {
-                    Console.WriteLine($"Skip worksheet {worksheet.Name}, {dtdnfou.Message}");
+                    _logger.LogError(EventIds.s_errorIdTruckDataNotFound, dtdnfou, "Skip worksheet {Name}", worksheet.Name);
                 }
                 catch (TruckAlreadyExistingException tae)
                 {
-                    Console.WriteLine("Truck is already existing, skip {TruckIdentifier}", matches.First().Value);
+                    _logger.LogError(EventIds.s_errorIdTruckAlreadyExists, tae, "Truck is already existing, skip {TruckName}", matches.First().Value);
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(e);
+                    _logger.LogCritical(EventIds.s_errorIdUnknownExceptionInExcelDataLoader, e, "Critical exception");
                     throw;
                 }
             }
@@ -65,14 +78,14 @@ public class ExcelDataLoader
         List<Item> items = new();
         try
         {
-            Console.WriteLine("Handle Worksheet for items");
+            _logger.LogDebug("Handle Worksheet for items");
             worksheet.Read();
             Row[] rows = worksheet.Rows.ToArray();
-            Console.WriteLine($"Amount of rows : {rows.Count()}");
+            _logger.LogDebug("Amount of rows : {RowCount}", rows.Length);
 
             foreach (Row row in rows)
             {
-                Item item = new Item();
+                Item item = new();
                 foreach (Cell cell in row.Cells)
                 {
                     if (row.RowNumber == 1)
@@ -118,19 +131,16 @@ public class ExcelDataLoader
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
+            _logger.LogCritical(EventIds.s_errorIdUnknownExceptionInExcelDataLoader, e, "Critical exception");
         }
 
-        Console.WriteLine($"Items found {items.Count}");
+        _logger.LogInformation("Items found {ItemCount}", items.Count);
         return items;
     }
 
-    private static readonly char[] s_splitSeparators = new List<char> {',', ';', '\n', '\r'}.ToArray();
-
     internal FireTruck HandleFireTruck(Worksheet worksheet, ref List<FireTruck> fireTrucks)
     {
-        Console.WriteLine("HandleFireTruck");
-        Console.WriteLine(worksheet.Name);
+        _logger.LogDebug("HandleFireTruck {WorksheetName}", worksheet.Name);
         if (string.IsNullOrWhiteSpace(worksheet.Name))
         {
             throw new WorksheetNotCorrectNamedException("The worksheet is not name is empty");
@@ -152,6 +162,7 @@ public class ExcelDataLoader
                 throw new FireTruckDataNotFoundException(
                     $"There are no data for a firetruck in worksheet {worksheet.Name}");
             }
+
             Row row = rows[1]; // Row 1 is containing all information about the car
 
             if (!row.Cells.Any())
@@ -159,6 +170,7 @@ public class ExcelDataLoader
                 throw new FireTruckDataNotFoundException(
                     $"There are no data for a firetruck in the row {row.RowNumber}");
             }
+
             foreach (Cell cell in row.Cells)
             {
                 switch (cell.ColumnNumber)
@@ -177,10 +189,10 @@ public class ExcelDataLoader
         return truck;
     }
 
-    private static void HandleLocationsOfTruck(Row[] rows, FireTruck truck)
+    private void HandleLocationsOfTruck(Row[] rows, FireTruck truck)
     {
         Location currentLocation = new();
-        var itemGlossary = new Dictionary<int, LocationItem>();
+        Dictionary<int, LocationItem> itemGlossary = new();
         for (int index = 3; index < rows.Length; index++)
         {
             Row row = rows[index];
@@ -200,39 +212,36 @@ public class ExcelDataLoader
                             // Add current items to the location
                             if (itemGlossary.Any())
                             {
-                                currentLocation.Items.AddRange(itemGlossary.Values.Where(x => !string.IsNullOrWhiteSpace(x.Identifier)));
+                                currentLocation.Items.AddRange(
+                                    itemGlossary.Values.Where(x => !string.IsNullOrWhiteSpace(x.Identifier)));
                             }
 
                             truck.Locations.Add(currentLocation);
                             currentLocation = new Location();
                         }
 
-                        currentLocation.Identifier = (string) cell.Value;
+                        currentLocation.Identifier = (string)cell.Value;
                         break;
                     case 2:
                         // Image skip
                         break;
                     case 3:
                         // Item name
-                        var item = new LocationItem
-                        {
-                            Identifier = (string) cell.Value
-                        };
+                        LocationItem item = new() {Identifier = (string)cell.Value};
                         itemGlossary.Add(row.RowNumber, item);
 
                         break;
                     case 4:
                         // Quantity
-                        itemGlossary[row.RowNumber].Quantity = int.Parse((string) cell.Value);
+                        itemGlossary[row.RowNumber].Quantity = int.Parse((string)cell.Value);
                         break;
                     case 5:
                         // Additions to the current item
                         itemGlossary[row.RowNumber].AdditionalInformation =
-                            ((string) cell.Value).Split(s_splitSeparators).ToList();
+                            ((string)cell.Value).Split(s_splitSeparators).ToList();
                         break;
                     default:
-                        Console.WriteLine(
-                            $"The current item in row {cell.RowNumber} and column {cell.ColumnNumber} is not implemented, so not used yet.");
+                        _logger.LogWarning("The current item in row {RowNumber} and column {ColumnNumber} is not implemented, so not used yet", cell.RowNumber, cell.ColumnNumber);
                         break;
                 }
             }

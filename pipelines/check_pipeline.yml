@@ -87,7 +87,7 @@ steps:
   inputs:
     command: test
     projects: '**/*Test.csproj'
-    arguments: '--configuration $(BuildConfiguration) --collect:"XPlat Code Coverage" --filter TestCategory=!~DEV'
+    arguments: '--configuration $(BuildConfiguration) --collect:"XPlat Code Coverage" --filter Category!~DEV'
     
 
 - script: 'dotnet tool install --global dotnet-reportgenerator-globaltool --version 5.1.19'  
