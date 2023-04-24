@@ -1,0 +1,13 @@
+﻿[
+    {
+        "Identifier": "01/42/01",
+        "TruckType": "Hamburg Light",
+        "TruckTypeShort": "FT"
+    },
+    {
+        "Identifier": "01/36/01",
+        "TruckType": "Ladder",
+        "TruckTypeShort": "LD"
+    }
+]
+

@@ -1,0 +1,22 @@
+.location-items-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    padding: 16px;
+    margin-right: 8px;
+    scroll-snap-align: center;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    border: 2px solid transparent;
+}
+
+.location-items-card.selected {
+    border-color: #007bff;
+}
+
+.location-items-card:not(.selected) {
+    border-color: transparent;
+}

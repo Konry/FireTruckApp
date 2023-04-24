@@ -1,0 +1,48 @@
+.container {
+    display: flex;
+    flex-direction: column;
+}
+
+.scrollable-horizontal-list {
+    display: flex;
+    justify-content: center;
+    min-width: 100%;
+    scroll-snap-type: x mandatory;
+}
+
+.scrollable-vertical-list {
+    justify-content: center;
+    min-width: 100%;
+    scroll-snap-type: x mandatory;
+}
+
+.modal {
+    display: flex;
+    position: fixed;
+    justify-content: center;
+    align-items: center;
+    top: 5%;
+    left: 5%;
+    width: 90%;
+    height: 90%;
+    background-color: rgba(0, 0, 0, 0.3);
+    z-index: 9999;
+    border-radius: 20px;
+    mso-border-shadow: yes;
+}
+
+.selectedTruckIdentifier {
+    display: flex;
+    justify-content: center;
+    min-width: 100%;
+    scroll-snap-type: x mandatory;
+}
+
+.list-item:hover {
+    background-color: #f0f0f0;
+}
+
+.toast-container {
+    z-index: 9999;
+}
+

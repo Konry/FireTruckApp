@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FireTruckApp.DataModel\FireTruckApp.DataModel.csproj"/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FastExcel" Version="3.0.13"/>
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.0"/>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3"/>
+  </ItemGroup>
+
+</Project>
