@@ -1,12 +1,10 @@
 // Copyright (c) Jan Philipp Luehrig. All rights reserved.
 // These files are licensed to you under the MIT license.
 
-using System.Net;
+
 using System.Web.Http;
-using FireTruckApi.DataHandling;
-using FireTruckApp.DataLoader;
-using FireTruckApp.DataModel;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace FireTruckApi.Controllers;
 
@@ -59,7 +57,7 @@ public class FireTruckConfigurationController : ControllerBase
                 }
                 catch (Exception e)
                 {
-                    _logger.LogCritical(EventIds.s_errorIdUnknownErrorInFireTruckConfiguration, e,
+                    _logger.LogCritical(EventIds.SErrorIdUnknownErrorInFireTruckConfiguration, e,
                         "Critical exception in update storage");
                     Console.WriteLine(e);
                     throw;

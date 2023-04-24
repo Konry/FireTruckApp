@@ -19,7 +19,7 @@ public interface IExcelDataLoader
 
 public class ExcelDataLoader : IExcelDataLoader
 {
-    private static readonly char[] s_splitSeparators = new List<char> {',', ';', '\n', '\r'}.ToArray();
+    private static readonly char[] SSplitSeparators = new List<char> {',', ';', '\n', '\r'}.ToArray();
     private readonly ILogger<ExcelDataLoader> _logger;
 
     public ExcelDataLoader(ILogger<ExcelDataLoader> logger)
@@ -53,17 +53,17 @@ public class ExcelDataLoader : IExcelDataLoader
                 }
                 catch (FireTruckDataNotFoundException dtdnfou)
                 {
-                    _logger.LogError(EventIds.s_errorIdTruckDataNotFound, dtdnfou, "Skip worksheet {Name}",
+                    _logger.LogError(EventIds.SErrorIdTruckDataNotFound, dtdnfou, "Skip worksheet {Name}",
                         worksheet.Name);
                 }
                 catch (TruckAlreadyExistingException tae)
                 {
-                    _logger.LogError(EventIds.s_errorIdTruckAlreadyExists, tae,
+                    _logger.LogError(EventIds.SErrorIdTruckAlreadyExists, tae,
                         "Truck is already existing, skip {TruckName}", matches.First().Value);
                 }
                 catch (Exception e)
                 {
-                    _logger.LogCritical(EventIds.s_errorIdUnknownExceptionInExcelDataLoader, e, "Critical exception");
+                    _logger.LogCritical(EventIds.SErrorIdUnknownExceptionInExcelDataLoader, e, "Critical exception");
                     throw;
                 }
             }
@@ -114,7 +114,7 @@ public class ExcelDataLoader : IExcelDataLoader
                             // Image
                             break;
                         case 4:
-                            item.AlternateWording = ((string)cell.Value).Split(s_splitSeparators).ToList();
+                            item.AlternateWording = ((string)cell.Value).Split(SSplitSeparators).ToList();
                             break;
                         case 5:
                             break;
@@ -122,7 +122,7 @@ public class ExcelDataLoader : IExcelDataLoader
                             item.Description = (string)cell.Value;
                             break;
                         case 7:
-                            item.YoutubeLinks = ((string)cell.Value).Split(s_splitSeparators).ToList();
+                            item.YoutubeLinks = ((string)cell.Value).Split(SSplitSeparators).ToList();
                             break;
                     }
                 }
@@ -135,7 +135,7 @@ public class ExcelDataLoader : IExcelDataLoader
         }
         catch (Exception e)
         {
-            _logger.LogCritical(EventIds.s_errorIdUnknownExceptionInExcelDataLoader, e, "Critical exception");
+            _logger.LogCritical(EventIds.SErrorIdUnknownExceptionInExcelDataLoader, e, "Critical exception");
         }
 
         _logger.LogInformation("Items found {ItemCount}", items.Count);
@@ -242,7 +242,7 @@ public class ExcelDataLoader : IExcelDataLoader
                     case 5:
                         // Additions to the current item
                         itemGlossary[row.RowNumber].AdditionalInformation =
-                            ((string)cell.Value).Split(s_splitSeparators).ToList();
+                            ((string)cell.Value).Split(SSplitSeparators).ToList();
                         break;
                     default:
                         _logger.LogWarning(

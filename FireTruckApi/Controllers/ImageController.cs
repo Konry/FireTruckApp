@@ -9,30 +9,30 @@ namespace FireTruckApi.Controllers;
 [Route("[controller]")]
 public class ImageController : ControllerBase
 {
-    private const string _contentTypeJpeg = "image/jpeg";
-    private const string _fileEndingJpg = ".jpg";
-    private const string _folderNameImages = "images";
+    private const string ContentTypeJpeg = "image/jpeg";
+    private const string FileEndingJpg = ".jpg";
+    private const string FolderNameImages = "images";
 
-    private static readonly string commonAppData =
+    private static readonly string CommonAppData =
         Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
 
-    private static readonly string basePath =
-        $"{commonAppData}{Path.DirectorySeparatorChar}FireTruckApi{Path.DirectorySeparatorChar}";
+    private static readonly string BasePath =
+        $"{CommonAppData}{Path.DirectorySeparatorChar}FireTruckApi{Path.DirectorySeparatorChar}";
 
-    private static readonly string imagePath =
-        $"{basePath}{Path.DirectorySeparatorChar}{_folderNameImages}{Path.DirectorySeparatorChar}";
+    private static readonly string ImagePath =
+        $"{BasePath}{Path.DirectorySeparatorChar}{FolderNameImages}{Path.DirectorySeparatorChar}";
 
-    private static readonly string baseImageName = "base" + _fileEndingJpg;
+    private static readonly string BaseImageName = "base" + FileEndingJpg;
 
     [HttpGet(Name = "GetFireTruckImage")]
     public IActionResult Get(string fireTruck, string? location = null)
     {
         if (location != null)
         {
-            return PhysicalFile(imagePath + fireTruck + Path.DirectorySeparatorChar + location + _fileEndingJpg,
-                _contentTypeJpeg);
+            return PhysicalFile(ImagePath + fireTruck + Path.DirectorySeparatorChar + location + FileEndingJpg,
+                ContentTypeJpeg);
         }
 
-        return PhysicalFile(imagePath + fireTruck + Path.DirectorySeparatorChar + baseImageName, _contentTypeJpeg);
+        return PhysicalFile(ImagePath + fireTruck + Path.DirectorySeparatorChar + BaseImageName, ContentTypeJpeg);
     }
 }

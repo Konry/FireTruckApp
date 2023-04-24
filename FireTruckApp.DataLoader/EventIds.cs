@@ -8,7 +8,7 @@ namespace FireTruckApp.DataLoader;
 public static class EventIds
 {
     // Dataloader 50
-    internal static readonly EventId s_errorIdUnknownExceptionInExcelDataLoader = new(50_000_000);
-    internal static readonly EventId s_errorIdTruckDataNotFound = new(50_000_002);
-    internal static readonly EventId s_errorIdTruckAlreadyExists = new(50_000_001);
+    internal static readonly EventId SErrorIdUnknownExceptionInExcelDataLoader = new(50_000_000);
+    internal static readonly EventId SErrorIdTruckDataNotFound = new(50_000_002);
+    internal static readonly EventId SErrorIdTruckAlreadyExists = new(50_000_001);
 }

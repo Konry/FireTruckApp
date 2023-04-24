@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FireTruckApi", "FireTruckAp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FireTruckReactApp", "FireTruckReactApp\FireTruckReactApp.csproj", "{1215BAB3-3B55-455D-BEA6-CC990F41B925}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FireTruckApiTest", "FireTruckApiTest\FireTruckApiTest.csproj", "{44D41139-8B41-4EB3-AC1C-C39493DF838F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -54,5 +56,9 @@ Global
 		{1215BAB3-3B55-455D-BEA6-CC990F41B925}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1215BAB3-3B55-455D-BEA6-CC990F41B925}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1215BAB3-3B55-455D-BEA6-CC990F41B925}.Release|Any CPU.Build.0 = Release|Any CPU
+		{44D41139-8B41-4EB3-AC1C-C39493DF838F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44D41139-8B41-4EB3-AC1C-C39493DF838F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44D41139-8B41-4EB3-AC1C-C39493DF838F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44D41139-8B41-4EB3-AC1C-C39493DF838F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
