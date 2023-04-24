@@ -155,7 +155,7 @@ csharp_space_between_parentheses = false
 csharp_space_between_square_brackets = false
 
 # License header
-file_header_template = Copyright (c) Jan Philipp Luehrig.All rights reserved.\nThese files are licensed to you under the MIT license.
+file_header_template = Copyright (c) Jan Philipp Luehrig. All rights reserved.\nThese files are licensed to you under the MIT license.
 
 # C++ Files
 [*.{cpp,h,in}]

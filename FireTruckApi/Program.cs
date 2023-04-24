@@ -3,6 +3,7 @@
 
 using FireTruckApi.DataHandling;
 using FireTruckApp.DataLoader;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Serilog;
 using Serilog.Core;
 
@@ -22,13 +23,13 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSingleton<IDataStorage, DataStorage>();
 builder.Services.AddSingleton<IExcelDataLoader, ExcelDataLoader>();
-builder.Services.AddHealthChecks().AddCheck<SampleHealthCheck>("Sample");
+builder.Services.AddHealthChecks().AddCheck<ApiHealthCheck>("Api", failureStatus: HealthStatus.Degraded);
 
 builder.Services.AddSwaggerGen();
 
 WebApplication app = builder.Build();
 
-app.UseHealthChecks("/healthz");
+app.UseHealthChecks("/healthz"); // needed for docker
 app.MapHealthChecks("/health");
 
 // Configure the HTTP request pipeline.
