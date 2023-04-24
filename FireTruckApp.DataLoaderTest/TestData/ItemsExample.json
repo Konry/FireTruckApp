@@ -1,0 +1,25 @@
+[
+    {
+        "Identifier": "Axe",
+        "Type": "Axe",
+        "Weight": 5.7,
+        "Tags": [
+            "TH",
+            "Technical support",
+            "Fire"
+        ]
+    },
+    {
+        "Identifier": "Hose C15",
+        "Type": "Hose",
+        "Weight": 4.5,
+        "AdditionalInfo": [
+            {
+                "Length": 25
+            }
+        ],
+        "Tags": [
+            "Fire"
+        ]
+    }
+]
