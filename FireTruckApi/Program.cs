@@ -4,27 +4,32 @@
 using FireTruckApi.DataHandling;
 using FireTruckApp.DataLoader;
 using Serilog;
+using Serilog.Core;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-var logger = new LoggerConfiguration()
-    .ReadFrom.Configuration(builder.Configuration)
-    .Enrich.FromLogContext()
-    .CreateLogger();
+Logger logger = new LoggerConfiguration().ReadFrom.Configuration(builder.Configuration).WriteTo.Console().Enrich
+    .FromLogContext().CreateLogger();
 
 builder.Logging.ClearProviders();
 builder.Logging.AddSerilog(logger);
 // Add services to the container.
 
+logger.Information("Startup Firetruck Api");
+
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<IDataStorage, DataStorage>();
 builder.Services.AddSingleton<IExcelDataLoader, ExcelDataLoader>();
+builder.Services.AddHealthChecks().AddCheck<SampleHealthCheck>("Sample");
+
+builder.Services.AddSwaggerGen();
 
 WebApplication app = builder.Build();
 
+app.UseHealthChecks("/healthz");
+app.MapHealthChecks("/health");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

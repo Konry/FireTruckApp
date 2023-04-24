@@ -19,13 +19,14 @@ public interface IExcelDataLoader
 
 public class ExcelDataLoader : IExcelDataLoader
 {
-    private readonly ILogger<ExcelDataLoader> _logger;
     private static readonly char[] s_splitSeparators = new List<char> {',', ';', '\n', '\r'}.ToArray();
+    private readonly ILogger<ExcelDataLoader> _logger;
 
     public ExcelDataLoader(ILogger<ExcelDataLoader> logger)
     {
         _logger = logger;
     }
+
     public (List<Item> Items, List<FireTruck> Trucks) LoadXlsxFile(string file, bool tabPerTruck = true)
     {
         FileInfo inputFile = new(file);
@@ -40,7 +41,8 @@ public class ExcelDataLoader : IExcelDataLoader
             _logger.LogDebug("Worksheet Name:{Name}, Index:{TableIndex}", worksheet.Name, worksheet.Index);
             const string fireTruckPattern = @"(\d+\W\d+\W\d+)";
 
-            MatchCollection matches = Matches(worksheet.Name, fireTruckPattern, RegexOptions.None, new TimeSpan(0,0,3));
+            MatchCollection matches = Matches(worksheet.Name, fireTruckPattern, RegexOptions.None,
+                new TimeSpan(0, 0, 3));
             if (matches.Count > 0)
             {
                 // Fire truck handling
@@ -51,11 +53,13 @@ public class ExcelDataLoader : IExcelDataLoader
                 }
                 catch (FireTruckDataNotFoundException dtdnfou)
                 {
-                    _logger.LogError(EventIds.s_errorIdTruckDataNotFound, dtdnfou, "Skip worksheet {Name}", worksheet.Name);
+                    _logger.LogError(EventIds.s_errorIdTruckDataNotFound, dtdnfou, "Skip worksheet {Name}",
+                        worksheet.Name);
                 }
                 catch (TruckAlreadyExistingException tae)
                 {
-                    _logger.LogError(EventIds.s_errorIdTruckAlreadyExists, tae, "Truck is already existing, skip {TruckName}", matches.First().Value);
+                    _logger.LogError(EventIds.s_errorIdTruckAlreadyExists, tae,
+                        "Truck is already existing, skip {TruckName}", matches.First().Value);
                 }
                 catch (Exception e)
                 {
@@ -241,7 +245,9 @@ public class ExcelDataLoader : IExcelDataLoader
                             ((string)cell.Value).Split(s_splitSeparators).ToList();
                         break;
                     default:
-                        _logger.LogWarning("The current item in row {RowNumber} and column {ColumnNumber} is not implemented, so not used yet", cell.RowNumber, cell.ColumnNumber);
+                        _logger.LogWarning(
+                            "The current item in row {RowNumber} and column {ColumnNumber} is not implemented, so not used yet",
+                            cell.RowNumber, cell.ColumnNumber);
                         break;
                 }
             }

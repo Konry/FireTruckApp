@@ -15,12 +15,13 @@ namespace FireTruckApi.Controllers;
 public class FireTruckConfigurationController : ControllerBase
 {
     private const string ContentTypeOpenXml = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+    private readonly IExcelDataLoader _excelDataLoader;
 
     private readonly ILogger<FireTruckConfigurationController> _logger;
-    private readonly IExcelDataLoader _excelDataLoader;
     private readonly IDataStorage _storage;
 
-    public FireTruckConfigurationController(ILogger<FireTruckConfigurationController> logger, IExcelDataLoader excelDataLoader, IDataStorage storage)
+    public FireTruckConfigurationController(ILogger<FireTruckConfigurationController> logger,
+        IExcelDataLoader excelDataLoader, IDataStorage storage)
     {
         _logger = logger;
         _excelDataLoader = excelDataLoader;
@@ -58,7 +59,8 @@ public class FireTruckConfigurationController : ControllerBase
                 }
                 catch (Exception e)
                 {
-                    _logger.LogCritical(EventIds.s_errorIdUnknownErrorInFireTruckConfiguration, e, "Critical exception in update storage");
+                    _logger.LogCritical(EventIds.s_errorIdUnknownErrorInFireTruckConfiguration, e,
+                        "Critical exception in update storage");
                     Console.WriteLine(e);
                     throw;
                 }

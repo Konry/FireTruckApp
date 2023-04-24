@@ -8,8 +8,6 @@ namespace FireTruckApi.DataHandling;
 
 public class DataStorage : IDataStorage
 {
-    private readonly ILogger<DataStorage> _logger;
-
     private static readonly string commonAppData =
         Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
 
@@ -18,6 +16,7 @@ public class DataStorage : IDataStorage
 
     private static readonly string itemStorageFileName = "items.json";
     private static readonly string truckStorageFileName = "trucks.json";
+    private readonly ILogger<DataStorage> _logger;
 
     public DataStorage(ILogger<DataStorage> logger)
     {
@@ -28,7 +27,8 @@ public class DataStorage : IDataStorage
         }
         catch (Exception e)
         {
-            _logger.LogCritical(EventIds.s_errorIdUnknownExceptionInDataStorageInitialization, e, "Critical Exception in data handling");
+            _logger.LogCritical(EventIds.s_errorIdUnknownExceptionInDataStorageInitialization, e,
+                "Critical Exception in data handling");
         }
     }
 
