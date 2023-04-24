@@ -1,9 +1,10 @@
-// Copyright (c) Jan Philipp Luehrig.All rights reserved.
+// Copyright (c) Jan Philipp Luehrig. All rights reserved.
 // These files are licensed to you under the MIT license.
 
 using FastExcel;
 using FireTruckApp.DataLoader;
 using FireTruckApp.DataModel;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace FireTruckApp.DataLoaderTest;
 
@@ -12,35 +13,29 @@ public class ExcelDataLoaderTest
 {
     private const string WorksheetName = "01-01-01";
 
-    [Test, Category("DEV")]
+    [Test]
+    [Category("DEV")]
     public void LoadExcelFile_MultipleTabs_LoadDifferentFireTrucks()
     {
         // Arrange
-        ExcelDataLoader sut = new();
+        ExcelDataLoader sut = new(new NullLogger<ExcelDataLoader>());
 
         // Act
-        sut.LoadXLSXFile(@"E:\Onedrive\Feuerwehr\Fahrzeuge + Ausstattung\Ausstattung.xlsx",tabPerTruck: true);
+        sut.LoadXlsxFile(@"E:\Onedrive\Feuerwehr\Fahrzeuge + Ausstattung\Ausstattung.xlsx", true);
         // Assert
+
+        Assert.Fail();
     }
 
     [Test]
     public void HandleFireTruck_TwoSheetsWithSameName_ThrowsException()
     {
         // Arrange
-        var worksheet = new Worksheet
-        {
-            Name = WorksheetName
-        };
-        var emptyRows = new List<Row>();
+        Worksheet worksheet = new() {Name = WorksheetName};
+        List<Row> emptyRows = new();
         worksheet.Rows = emptyRows;
-        var sut = new ExcelDataLoader();
-        var list = new List<FireTruck>
-        {
-            new()
-            {
-                Identifier = worksheet.Name
-            }
-        };
+        ExcelDataLoader sut = new(new NullLogger<ExcelDataLoader>());
+        List<FireTruck> list = new() {new() {Identifier = worksheet.Name}};
         // Act
 
         // Assert
@@ -52,58 +47,48 @@ public class ExcelDataLoaderTest
     public void HandleFireTruck_NoWorksheetName_ThrowsNoCorrectNameException()
     {
         // Arrange
-        var worksheet = new Worksheet();
-        var emptyRows = new List<Row>();
+        Worksheet worksheet = new();
+        List<Row> emptyRows = new();
         worksheet.Rows = emptyRows;
 
-        var sut = new ExcelDataLoader();
-        var list = new List<FireTruck>
-        {
-            new()
-            {
-                Identifier = worksheet.Name
-            }
-        };
+        ExcelDataLoader sut = new(new NullLogger<ExcelDataLoader>());
+        List<FireTruck> list = new() {new() {Identifier = worksheet.Name}};
         // Act
 
         // Assert
         Assert.Throws<WorksheetNotCorrectNamedException>(() => sut.HandleFireTruck(worksheet, ref list));
     }
 
-    [Test, Ignore("Currently not working, worksheet needs to be read.")]
+    [Test]
+    [Ignore("Currently not working, worksheet needs to be read.")]
     public void HandleFireTruck_FirstRowContainsHeaderSecondEmpty_ThrowsDataNotFoundException()
     {
         // Arrange
-        var worksheet = new Worksheet()
-        {
-            Name = WorksheetName
-        };
-        var correctFilledRows = new List<Row>();
+        Worksheet worksheet = new() {Name = WorksheetName};
+        List<Row> correctFilledRows = new();
         worksheet.Rows = correctFilledRows;
 
-        var sut = new ExcelDataLoader();
-        var list = new List<FireTruck>();
+        ExcelDataLoader sut = new(new NullLogger<ExcelDataLoader>());
+        List<FireTruck> list = new();
         // Act
 
         // Assert
         Assert.Throws<FireTruckDataNotFoundException>(() => sut.HandleFireTruck(worksheet, ref list));
     }
 
-    [Test, Ignore("Currently not working, worksheet needs to be read.")]
+    [Test]
+    [Ignore("Currently not working, worksheet needs to be read.")]
     public void HandleFireTruck_FirstRowContainsHeaderSecondData_ReturnsATruck()
     {
         // Arrange
-        var worksheet = new Worksheet()
-        {
-            Name = WorksheetName
-        };
-        var correctFilledRows = new List<Row>();
+        Worksheet worksheet = new() {Name = WorksheetName};
+        List<Row> correctFilledRows = new();
         worksheet.Rows = correctFilledRows;
 
-        var sut = new ExcelDataLoader();
-        var list = new List<FireTruck>();
+        ExcelDataLoader sut = new(new NullLogger<ExcelDataLoader>());
+        List<FireTruck> list = new();
         // Act
-        var result = sut.HandleFireTruck(worksheet, ref list);
+        FireTruck result = sut.HandleFireTruck(worksheet, ref list);
 
         // Assert
         Assert.That(result, Is.Not.Null);

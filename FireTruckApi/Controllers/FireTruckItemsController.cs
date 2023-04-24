@@ -1,4 +1,4 @@
-// Copyright (c) Jan Philipp Luehrig.All rights reserved.
+// Copyright (c) Jan Philipp Luehrig. All rights reserved.
 // These files are licensed to you under the MIT license.
 
 using FireTruckApi.DataHandling;
@@ -19,9 +19,6 @@ public class FireTruckItemsController : ControllerBase
     }
 
     [HttpGet(Name = "GetFireTruckItems")]
-    public IEnumerable<LocationItem> Get(string fireTruck, string location)
-    {
-        return _dataStorage.FireTrucks.First(x => x.Identifier == fireTruck).Locations.First(y => y.Identifier == location).Items;
-    }
-
+    public IEnumerable<LocationItem> Get(string fireTruck, string location) => _dataStorage.FireTrucks
+        .First(x => x.Identifier == fireTruck).Locations.First(y => y.Identifier == location).Items;
 }

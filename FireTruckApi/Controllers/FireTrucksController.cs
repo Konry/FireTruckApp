@@ -1,4 +1,4 @@
-// Copyright (c) Jan Philipp Luehrig.All rights reserved.
+// Copyright (c) Jan Philipp Luehrig. All rights reserved.
 // These files are licensed to you under the MIT license.
 
 using FireTruckApi.DataHandling;
@@ -9,19 +9,15 @@ namespace FireTruckApi.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class FireTruckController : ControllerBase
+public class FireTrucksController : ControllerBase
 {
     private readonly IDataStorage _dataStorage;
 
-    public FireTruckController(IDataStorage dataStorage)
+    public FireTrucksController(IDataStorage dataStorage)
     {
         _dataStorage = dataStorage;
     }
 
     [HttpGet(Name = "GetFireTrucks")]
-    public IEnumerable<BareFireTruck> Get()
-    {
-        return _dataStorage.FireTrucks;
-    }
-
+    public IEnumerable<BareFireTruck> Get() => _dataStorage.FireTrucks;
 }

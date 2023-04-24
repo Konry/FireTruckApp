@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import './LocationItemsCard.css';
 
 
-const LocationItemsCard = ({ locationItemsData: locationItemsData, selected, handleClick }) => {
+const LocationItemsCard = ({locationItemsData: locationItemsData, selected, handleClick}) => {
     return (
         <div className="location-items-card" onClick={handleClick}>
             <div className="card-body">

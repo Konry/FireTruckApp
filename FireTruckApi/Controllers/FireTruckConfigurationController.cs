@@ -1,10 +1,11 @@
-// Copyright (c) Jan Philipp Luehrig.All rights reserved.
+// Copyright (c) Jan Philipp Luehrig. All rights reserved.
 // These files are licensed to you under the MIT license.
 
 using System.Net;
 using System.Web.Http;
 using FireTruckApi.DataHandling;
 using FireTruckApp.DataLoader;
+using FireTruckApp.DataModel;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FireTruckApi.Controllers;
@@ -13,47 +14,51 @@ namespace FireTruckApi.Controllers;
 [Microsoft.AspNetCore.Mvc.Route("[controller]")]
 public class FireTruckConfigurationController : ControllerBase
 {
+    private const string ContentTypeOpenXml = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+
+    private readonly ILogger<FireTruckConfigurationController> _logger;
+    private readonly IExcelDataLoader _excelDataLoader;
     private readonly IDataStorage _storage;
 
-    public FireTruckConfigurationController(IDataStorage storage)
+    public FireTruckConfigurationController(ILogger<FireTruckConfigurationController> logger, IExcelDataLoader excelDataLoader, IDataStorage storage)
     {
+        _logger = logger;
+        _excelDataLoader = excelDataLoader;
         _storage = storage;
     }
 
     [Microsoft.AspNetCore.Mvc.HttpPost(Name = "UploadXLSX")]
     public async Task<HttpResponseMessage> Post()
     {
-        HttpResponseMessage result = new()
-        {
-            StatusCode = HttpStatusCode.BadRequest
-        };
+        HttpResponseMessage result = new() {StatusCode = HttpStatusCode.BadRequest};
 
         try
         {
-            var httpStream = HttpContext.Request.Body;
-            string tempFileName = Path.GetTempFileName();
+            Stream httpStream = HttpContext.Request.Body;
+            string tempFileName = Path.GetTempPath() + Path.DirectorySeparatorChar + Path.GetRandomFileName();
 
-            if (HttpContext.Request.Headers.ContentType !=
-                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+            if (HttpContext.Request.Headers.ContentType != ContentTypeOpenXml)
             {
                 throw new HttpRequestException("The file in the given format will not be accepted");
             }
+
             await using (FileStream outputFileStream = new(tempFileName, FileMode.Create))
             {
                 await httpStream.CopyToAsync(outputFileStream);
             }
-            var loader = new ExcelDataLoader();
+
             await Task.Run(() =>
             {
                 try
                 {
-                    var res = loader.LoadXLSXFile(tempFileName);
+                    (List<Item> Items, List<FireTruck> Trucks) res = _excelDataLoader.LoadXlsxFile(tempFileName);
                     _storage.Update(res.Items);
                     _storage.Update(res.Trucks);
-                    Console.WriteLine( $"{res.Items.Count} {res.Trucks.Count}");
+                    _logger.LogTrace("{ItemCount} {TruckCount}", res.Items.Count, res.Trucks.Count);
                 }
                 catch (Exception e)
                 {
+                    _logger.LogCritical(EventIds.s_errorIdUnknownErrorInFireTruckConfiguration, e, "Critical exception in update storage");
                     Console.WriteLine(e);
                     throw;
                 }
@@ -71,6 +76,4 @@ public class FireTruckConfigurationController : ControllerBase
 
         return result;
     }
-
-
 }

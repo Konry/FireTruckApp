@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import {useState} from 'react';
 
 // Modal content component
 function ModalContent(props) {
-    const { data } = props;
+    const {data} = props;
 
     return (
         <div>
@@ -37,7 +37,7 @@ function ModalDialog() {
                 <div className="modal-overlay">
                     <div className="modal-content">
                         <button onClick={() => setShowModal(false)}>Close</button>
-                        <ModalContent data={selectedData} />
+                        <ModalContent data={selectedData}/>
                     </div>
                 </div>
             )}

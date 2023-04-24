@@ -1,19 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import { Modal, Button } from 'react-bootstrap';
-import { ToastContainer, toast  } from 'react-toastify';
+import React, {useEffect, useState} from 'react';
+import {Button, Modal} from 'react-bootstrap';
+import {toast, ToastContainer} from 'react-toastify';
 import FireTruckCard from "./components/FireTruckCard";
 import LocationCard from "./components/LocationCard";
 import LocationItemsCard from "./components/LocationItemsCard";
-import ItemCard from "./components/ItemCard";
 import 'react-toastify/dist/ReactToastify.css';
 import "./App.css";
-import Bugsnag from '@bugsnag/js'
 
 const locationData = [
-    { "location": "G1" },
-    { "location": "G2" },
-    { "location": "G3" }
+    {"location": "G1"},
+    {"location": "G2"},
+    {"location": "G3"}
 ];
+
 function App() {
 
     const [loading, setLoading] = useState(true);
@@ -73,6 +72,7 @@ function App() {
             setLoading(false);
         }
     }
+
     function handleRetry() {
         fetchBasicData().then(console.log("retry"), console.error("missed"))
         toast.info("Retry retrieving data")
@@ -94,12 +94,11 @@ function App() {
                                     key={item.identifier}
                                     fireTruckData={item}
                                     selected={selectedLocation.identifier === item.identifier}
-                                    handleClickTruck={() =>
-                                    {
+                                    handleClickTruck={() => {
                                         toast.success(`Select Trucks ${item.identifier}`)
                                         handleClickTruck(item)
                                     }
-                                }
+                                    }
                                 />
                             ))
                         }
@@ -118,8 +117,7 @@ function App() {
                 key={item.identifier}
                 locationItemsData={item}
                 selected={selectedLocationItem.identifier === item.identifier}
-                handleClick={() =>
-                {
+                handleClick={() => {
                     toast.success(`Select location item  ${item.identifier} ${selectedLocationItem}`)
                     handleClickLocationItem(item.identifier)
                     handleShowModal()
@@ -128,6 +126,7 @@ function App() {
             />
         ));
     };
+
     async function fetchLocationData(fireTruck) {
         try {
             const response = await fetch(`${process.env.REACT_APP_API_HOST}FireTruckLocation?fireTruck=${fireTruck}`);
@@ -158,8 +157,7 @@ function App() {
                 truckData={selectedTruck}
                 className={`card ${selectedLocation === item.identifier ? 'selected' : ''}`}
                 selected={selectedLocation.identifier === item.identifier}
-                handleClickLocation={() =>
-                {
+                handleClickLocation={() => {
                     toast.success(`Select location  ${item.identifier}`)
                     handleClickLocation(item)
                 }
@@ -167,7 +165,8 @@ function App() {
             />
         ));
     };
-    function ModalDialog({ item }) {
+
+    function ModalDialog({item}) {
         return (
             <div className="modal">
                 <div className="modal-content">
@@ -178,6 +177,7 @@ function App() {
             </div>
         );
     }
+
     // position={"top-center"}
     return (
         <div className="container">
@@ -194,7 +194,7 @@ function App() {
                     </Button>
                 </Modal.Footer>
             </Modal>
-            <ToastContainer autoClose={3000} hideProgressBar={true} pauseOnHover={true} newestOnTop={true} limit={3} />
+            <ToastContainer autoClose={3000} hideProgressBar={true} pauseOnHover={true} newestOnTop={true} limit={3}/>
             <div className="scrollable-horizontal-list">{renderTrucks()}</div>
             <div className="selectedTruckIdentifier">{selectedTruck.identifier}</div>
             <div className="scrollable-horizontal-list">{renderLocations(selectedTruck.identifier)}</div>
