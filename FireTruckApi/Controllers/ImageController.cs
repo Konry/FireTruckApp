@@ -29,7 +29,8 @@ public class ImageController : ControllerBase
     {
         if (location != null)
         {
-            return PhysicalFile(imagePath + fireTruck + Path.DirectorySeparatorChar + location + _fileEndingJpg, _contentTypeJpeg);
+            return PhysicalFile(imagePath + fireTruck + Path.DirectorySeparatorChar + location + _fileEndingJpg,
+                _contentTypeJpeg);
         }
 
         return PhysicalFile(imagePath + fireTruck + Path.DirectorySeparatorChar + baseImageName, _contentTypeJpeg);

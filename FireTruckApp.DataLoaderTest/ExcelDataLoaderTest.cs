@@ -21,7 +21,7 @@ public class ExcelDataLoaderTest
         ExcelDataLoader sut = new(new NullLogger<ExcelDataLoader>());
 
         // Act
-        sut.LoadXlsxFile(@"E:\Onedrive\Feuerwehr\Fahrzeuge + Ausstattung\Ausstattung.xlsx", true);
+        sut.LoadXlsxFile(@"E:\Onedrive\Feuerwehr\Fahrzeuge + Ausstattung\Ausstattung.xlsx");
         // Assert
 
         Assert.Fail();
@@ -35,7 +35,7 @@ public class ExcelDataLoaderTest
         List<Row> emptyRows = new();
         worksheet.Rows = emptyRows;
         ExcelDataLoader sut = new(new NullLogger<ExcelDataLoader>());
-        List<FireTruck> list = new() {new() {Identifier = worksheet.Name}};
+        List<FireTruck> list = new() {new FireTruck {Identifier = worksheet.Name}};
         // Act
 
         // Assert
@@ -52,7 +52,7 @@ public class ExcelDataLoaderTest
         worksheet.Rows = emptyRows;
 
         ExcelDataLoader sut = new(new NullLogger<ExcelDataLoader>());
-        List<FireTruck> list = new() {new() {Identifier = worksheet.Name}};
+        List<FireTruck> list = new() {new FireTruck {Identifier = worksheet.Name}};
         // Act
 
         // Assert
