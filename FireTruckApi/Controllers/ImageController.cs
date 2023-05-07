@@ -1,6 +1,7 @@
 // Copyright (c) Jan Philipp Luehrig. All rights reserved.
 // These files are licensed to you under the MIT license.
 
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FireTruckApi.Controllers;
@@ -10,7 +11,7 @@ namespace FireTruckApi.Controllers;
 public class ImageController : ControllerBase
 {
     private const string ContentTypeJpeg = "image/jpeg";
-    private const string FileEndingJpg = ".jpg";
+    private const string FileEndingJpeg = ".jpg";
     private const string FolderNameImages = "images";
 
     private static readonly string CommonAppData =
@@ -20,19 +21,52 @@ public class ImageController : ControllerBase
         $"{CommonAppData}{Path.DirectorySeparatorChar}FireTruckApi{Path.DirectorySeparatorChar}";
 
     private static readonly string ImagePath =
-        $"{BasePath}{Path.DirectorySeparatorChar}{FolderNameImages}{Path.DirectorySeparatorChar}";
+        $"{BasePath}{FolderNameImages}{Path.DirectorySeparatorChar}";
 
-    private static readonly string BaseImageName = "base" + FileEndingJpg;
+    private static readonly string BaseImageName = "base" + FileEndingJpeg;
 
     [HttpGet(Name = "GetFireTruckImage")]
-    public IActionResult Get(string fireTruck, string? location = null)
+    [ProducesResponseType(typeof(PhysicalFileResult), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(PhysicalFileResult), StatusCodes.Status206PartialContent)]
+    [ProducesResponseType(typeof(PhysicalFileResult), StatusCodes.Status416RangeNotSatisfiable)]
+    public ActionResult GetImage([FromHeader] string fireTruck, [FromHeader] string? location = null)
     {
+        if (string.IsNullOrWhiteSpace(fireTruck))
+        {
+            return BadRequest();
+        }
+
+        string imagePath;
         if (location != null)
         {
-            return PhysicalFile(ImagePath + fireTruck + Path.DirectorySeparatorChar + location + FileEndingJpg,
+
+            imagePath = ImagePath + fireTruck + Path.DirectorySeparatorChar + location + FileEndingJpeg;
+        }
+        else
+        {
+            imagePath = ImagePath + fireTruck + Path.DirectorySeparatorChar + BaseImageName;
+        }
+
+        if (!FileExists(imagePath))
+        {
+            return NotFound($"Image not found for firetruck {fireTruck}");
+        }
+
+        if (location != null)
+        {
+            return PhysicalFile(ImagePath + fireTruck + Path.DirectorySeparatorChar + location + FileEndingJpeg,
                 ContentTypeJpeg);
         }
 
         return PhysicalFile(ImagePath + fireTruck + Path.DirectorySeparatorChar + BaseImageName, ContentTypeJpeg);
+    }
+
+    private bool FileExists(string imagePath)
+    {
+        if (imagePath.Contains("NotExists"))
+        {
+            return false;
+        }
+        return true;
     }
 }

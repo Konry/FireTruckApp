@@ -20,12 +20,10 @@ public class FireTruckController : ControllerBase
     }
 
     [HttpGet("{identifier}", Name = nameof(GetSingleFireTruck))]
-    [ProducesResponseType(typeof(BareFireTruck), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(FireTruck), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-
-    // BareFireTruck
-    public ActionResult<BareFireTruck> GetSingleFireTruck(string identifier)
+    public ActionResult<FireTruck> GetSingleFireTruck(string identifier)
     {
         var fireTrucks = _dataStorage.FireTrucks.Where(x => x.Identifier == identifier).ToList();
 
@@ -42,5 +40,6 @@ public class FireTruckController : ControllerBase
     }
 
     [HttpGet(Name = nameof(GetAllFireTrucks))]
-    public IEnumerable<BareFireTruck> GetAllFireTrucks() => _dataStorage.FireTrucks;
+    [ProducesResponseType(typeof(IEnumerable<FireTruck>), StatusCodes.Status200OK)]
+    public ActionResult<IEnumerable<FireTruck>> GetAllFireTrucks() => Ok(_dataStorage.FireTrucks);
 }
