@@ -16,4 +16,7 @@ public static class EventIds
     // 02 Data Handling
     internal static readonly EventId ErrorIdUnknownErrorInStoreData = new(42_02_03_01);
     internal static readonly EventId ErrorIdUnknownErrorInLoadData = new(42_02_03_02);
+
+
+    internal static readonly EventId ErrorIdUnknownExceptionInUploadXLSX = new(42_01_04_00);
 }

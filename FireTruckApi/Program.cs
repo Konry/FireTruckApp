@@ -30,6 +30,24 @@ builder.Services.AddSingleton<IDataStorage, DataStorage>();
 builder.Services.AddSingleton<IExcelDataLoader, ExcelDataLoader>();
 builder.Services.AddHealthChecks().AddCheck<ApiHealthCheck>("Api", failureStatus: HealthStatus.Degraded);
 builder.Services.AddProblemDetails();
+builder.Services.AddControllers()
+    .ConfigureApiBehaviorOptions(options =>
+    {
+        // To preserve the default behavior, capture the original delegate to call later.
+        var builtInFactory = options.InvalidModelStateResponseFactory;
+
+        options.InvalidModelStateResponseFactory = context =>
+        {
+            // Perform logging here.
+            logger.Error("Error in api access");
+
+            // Invoke the default behavior, which produces a ValidationProblemDetails
+            // response.
+            // To produce a custom response, return a different implementation of
+            // IActionResult instead.
+            return builtInFactory(context);
+        };
+    });
 
 builder.Services.AddSwaggerGen();
 

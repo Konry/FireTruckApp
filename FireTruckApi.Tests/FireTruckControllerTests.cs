@@ -80,14 +80,4 @@ public class FireTruckControllerTests
             Assert.That(fireTruck!.Identifier, Is.EqualTo(truck.Identifier));
         });
     }
-
-    [Test]
-    public void METHOD()
-    {
-        // Arrange
-
-
-        // Act
-        // Assert
-    }
 }
