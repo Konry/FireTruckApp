@@ -20,6 +20,19 @@
 
     <ItemGroup>
       <ProjectReference Include="..\FireTruckApi\FireTruckApi.csproj" />
+      <ProjectReference Include="..\FireTruckApp.DataModel\FireTruckApp.DataModel.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="FireTruckApi">
+        <HintPath>..\FireTruckApi\bin\Debug\net7.0\FireTruckApi.dll</HintPath>
+      </Reference>
+      <Reference Include="Microsoft.AspNetCore.Mvc.Core">
+        <HintPath>C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\7.0.4\Microsoft.AspNetCore.Mvc.Core.dll</HintPath>
+      </Reference>
+      <Reference Include="Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions">
+        <HintPath>C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\7.0.4\Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions.dll</HintPath>
+      </Reference>
     </ItemGroup>
 
 </Project>

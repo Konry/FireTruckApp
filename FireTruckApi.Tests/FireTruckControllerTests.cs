@@ -4,7 +4,7 @@ using FireTruckApp.DataModel;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 
-namespace FireTruckApiTest;
+namespace FireTruckApi.Tests;
 
 public class FireTruckControllerTests
 {

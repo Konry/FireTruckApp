@@ -2,11 +2,10 @@
 // These files are licensed to you under the MIT license.
 
 using FastExcel;
-using FireTruckApp.DataLoader;
 using FireTruckApp.DataModel;
 using Microsoft.Extensions.Logging.Abstractions;
 
-namespace FireTruckApp.DataLoaderTest;
+namespace FireTruckApp.DataLoader.Tests;
 
 [TestFixture]
 public class ExcelDataLoaderTest

@@ -55,7 +55,7 @@ public class FireTruckConfigurationController : ControllerBase
                 }
                 catch (Exception e)
                 {
-                    _logger.LogCritical(EventIds.SErrorIdUnknownErrorInFireTruckConfiguration, e,
+                    _logger.LogCritical(EventIds.ErrorIdUnknownErrorInFireTruckConfiguration, e,
                         "Critical exception in update storage");
                     Console.WriteLine(e);
                     throw;

@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FireTruckApp", "FireTruckAp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FireTruckApp.DataLoader", "FireTruckApp.DataLoader\FireTruckApp.DataLoader.csproj", "{D52194B7-FD3E-4800-B340-036486FE85DE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FireTruckApp.DataLoaderTest", "FireTruckApp.DataLoaderTest\FireTruckApp.DataLoaderTest.csproj", "{E853B472-5989-4524-8E56-DFB44BA7FA20}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FireTruckApp.DataLoader.Tests", "FireTruckApp.DataLoader.Tests\FireTruckApp.DataLoader.Tests.csproj", "{E853B472-5989-4524-8E56-DFB44BA7FA20}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FireTruckApp.DataModel", "FireTruckApp.DataModel\FireTruckApp.DataModel.csproj", "{847968C1-8DB0-4AAA-BEAA-AE0FE6092B9F}"
 EndProject
@@ -17,7 +17,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FireTruckApi", "FireTruckAp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FireTruckReactApp", "FireTruckReactApp\FireTruckReactApp.csproj", "{1215BAB3-3B55-455D-BEA6-CC990F41B925}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FireTruckApiTest", "FireTruckApiTest\FireTruckApiTest.csproj", "{44D41139-8B41-4EB3-AC1C-C39493DF838F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FireTruckApi.Tests", "FireTruckApi.Tests\FireTruckApi.Tests.csproj", "{44D41139-8B41-4EB3-AC1C-C39493DF838F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

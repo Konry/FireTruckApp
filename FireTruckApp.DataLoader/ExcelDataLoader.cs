@@ -8,7 +8,7 @@ using FireTruckApp.DataModel;
 using Microsoft.Extensions.Logging;
 using static System.Text.RegularExpressions.Regex;
 
-[assembly: InternalsVisibleTo("FireTruckApp.DataLoaderTest")]
+[assembly: InternalsVisibleTo("FireTruckApp.DataLoader.Tests")]
 
 namespace FireTruckApp.DataLoader;
 
