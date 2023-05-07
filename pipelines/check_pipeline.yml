@@ -63,8 +63,8 @@ steps:
     projectKey: '$(sonarcloud_key)'
     extraProperties: |
       sonar.cs.vstest.reportsPaths=$(Agent.TempDirectory)/*.trx
-      sonar.cs.opencover.reportsPaths=$(Agent.TempDirectory)/**/coverage.opencover.xml      
-      sonar.cs.nunit.reportsPaths="$(Agent.BuildDirectory)/TestResult.xml"
+      sonar.cs.opencover.reportsPaths=$(Agent.TempDirectory)/**/coverage.opencover.xml   
+      sonar.coverageReportPaths="$(Agent.TempDirectory)/**/coverage.sonarqube.xml"
 
     #configMode: 'file'
     #scannerMode: 'CLI'
@@ -98,11 +98,11 @@ steps:
 - script: 'dotnet tool install --global dotnet-reportgenerator-globaltool --version 5.1.19'  
   displayName: 'Install ReportGenerator Tool'
   
-- script: 'reportgenerator -reports:$(Agent.TempDirectory)/**/coverage.cobertura.xml -targetdir:$(Build.SourcesDirectory)/coverlet/reports -reporttypes:"Cobertura"'  
+- script: 'reportgenerator -reports:$(Agent.TempDirectory)/**/coverage.cobertura.xml -targetdir:$(Build.SourcesDirectory)/coverlet/reports -reporttypes:"Cobertura;SonarQube"'  
   displayName: 'Create Code Coverage Reports'  
   
-- script: 'reportgenerator -reports:$(Agent.TempDirectory)/**/coverage.opencover.xml -targetdir:$(Build.SourcesDirectory)/coverlet/reports -reporttypes:"opencover"'  
-  displayName: 'Create Code Coverage Reports Opencover'  
+- script: 'reportgenerator -reports:$(Agent.TempDirectory)/**/coverage.sonarqube.xml -targetdir:$(Build.SourcesDirectory)/coverlet/reports -reporttypes:"SonarQube"'  
+  displayName: 'Create Code Coverage Reports SonarQube'  
   
 # Publish code coverage report to the pipeline
 - task: PublishCodeCoverageResults@1
