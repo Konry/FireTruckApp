@@ -155,9 +155,8 @@ public class ExcelDataLoader : IExcelDataLoader
             throw new TruckAlreadyExistingException($"Truck already inside the list {worksheet.Name}");
         }
 
-        FireTruck truck = new();
+        FireTruck truck = new(worksheet.Name);
         {
-            truck.Identifier = worksheet.Name;
             worksheet.Read();
             Row[] rows = worksheet.Rows.ToArray();
 

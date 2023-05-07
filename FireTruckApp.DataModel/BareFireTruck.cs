@@ -12,12 +12,13 @@ public class BareFireTruck
 
 public class FireTruck : BareFireTruck
 {
-    public FireTruck()
+    public FireTruck(string identifier)
     {
+        Identifier = identifier;
         Locations = new List<Location>();
     }
 
-    public List<Location> Locations { get; set; }
+    public List<Location> Locations { get; }
 }
 
 public class Location : FireTruckLocation

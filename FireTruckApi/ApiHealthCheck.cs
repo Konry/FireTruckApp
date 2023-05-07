@@ -1,20 +1,58 @@
 // Copyright (c) Jan Philipp Luehrig. All rights reserved.
 // These files are licensed to you under the MIT license.
 
+using System.Collections.ObjectModel;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 
-public class ApiHealthCheck : IHealthCheck
+public class ApiHealthCheck : IHealthCheck, IHealthProvidingService
 {
     public Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context,
         CancellationToken cancellationToken = default)
     {
-        bool isHealthy = true;
+        HealthStatus lowest = HealthStatus.Healthy;
 
-        if (isHealthy)
+        foreach (var healthStatus in _healthStatus.Values)
         {
-            return Task.FromResult(HealthCheckResult.Healthy("A healthy result."));
+            if (healthStatus < lowest)
+            {
+                lowest = healthStatus;
+            }
         }
 
-        return Task.FromResult(new HealthCheckResult(context.Registration.FailureStatus, "An unhealthy result."));
+        string description = "";
+        switch (lowest)
+        {
+            case HealthStatus.Healthy:
+                description = "All services are working properly";
+                break;
+            case HealthStatus.Degraded:
+                description = "At least one service is degraded, system is working, but the experience is limited";
+                break;
+            case HealthStatus.Unhealthy:
+                description = "At least one service is not working properly, system is not working";
+                break;
+        }
+
+        return Task.FromResult(new HealthCheckResult(lowest, description));
+
     }
+
+    private readonly IDictionary<string, HealthStatus> _healthStatus = new Dictionary<string, HealthStatus>();
+
+    public void SetStatusOfService(string serviceName, HealthStatus status)
+    {
+        if (!_healthStatus.ContainsKey(serviceName))
+        {
+            _healthStatus.Add(serviceName, status);
+        }
+        else
+        {
+            _healthStatus[serviceName] = status;
+        }
+    }
+}
+
+public interface IHealthProvidingService
+{
+    public void SetStatusOfService(string serviceName, HealthStatus status);
 }

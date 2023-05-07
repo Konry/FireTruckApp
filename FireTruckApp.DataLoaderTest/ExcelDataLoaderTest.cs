@@ -13,7 +13,7 @@ public class ExcelDataLoaderTest
 {
     private const string WorksheetName = "01-01-01";
 
-    [Test]
+    [Test, Ignore("This is a DEV Test, working only locally")]
     [Category("DEV")]
     public void LoadExcelFile_MultipleTabs_LoadDifferentFireTrucks()
     {
@@ -35,7 +35,10 @@ public class ExcelDataLoaderTest
         List<Row> emptyRows = new();
         worksheet.Rows = emptyRows;
         ExcelDataLoader sut = new(new NullLogger<ExcelDataLoader>());
-        List<FireTruck> list = new() {new FireTruck {Identifier = worksheet.Name}};
+        List<FireTruck> list = new()
+        {
+            new FireTruck(worksheet.Name)
+        };
         // Act
 
         // Assert
@@ -52,7 +55,7 @@ public class ExcelDataLoaderTest
         worksheet.Rows = emptyRows;
 
         ExcelDataLoader sut = new(new NullLogger<ExcelDataLoader>());
-        List<FireTruck> list = new() {new FireTruck {Identifier = worksheet.Name}};
+        List<FireTruck> list = new() {new FireTruck(worksheet.Name)};
         // Act
 
         // Assert

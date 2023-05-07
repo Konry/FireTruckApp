@@ -1,7 +1,6 @@
 // Copyright (c) Jan Philipp Luehrig. All rights reserved.
 // These files are licensed to you under the MIT license.
 
-using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FireTruckApi.Controllers;

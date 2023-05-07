@@ -1,7 +1,7 @@
 // Copyright (c) Jan Philipp Luehrig. All rights reserved.
 // These files are licensed to you under the MIT license.
 
-using System.Web.Http;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 using AspNet = Microsoft.AspNetCore.Mvc;
@@ -9,7 +9,7 @@ using AspNet = Microsoft.AspNetCore.Mvc;
 namespace FireTruckApi.Controllers;
 
 [ApiController]
-[AspNet.Route("[controller]")]
+[Route("[controller]")]
 public class FireTruckController : ControllerBase
 {
     private readonly IDataStorage _dataStorage;
@@ -19,33 +19,28 @@ public class FireTruckController : ControllerBase
         _dataStorage = dataStorage ?? throw new ArgumentNullException(nameof(dataStorage));
     }
 
-    [Microsoft.AspNetCore.Mvc.HttpGet(Name = "GetFireTrucks")]
-    public BareFireTruck Get(string identifier)
+    [HttpGet("{identifier}", Name = nameof(GetSingleFireTruck))]
+    [ProducesResponseType(typeof(BareFireTruck), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+
+    // BareFireTruck
+    public ActionResult<BareFireTruck> GetSingleFireTruck(string identifier)
     {
         var fireTrucks = _dataStorage.FireTrucks.Where(x => x.Identifier == identifier).ToList();
 
-        if (fireTrucks == null || !fireTrucks.Any())
+        if (!fireTrucks.Any())
         {
-            var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
-            {
-                Content = new StringContent($"No fire truck with ID {identifier}"),
-                ReasonPhrase = "Fire Truck ID Not Found"
-            };
-            throw new HttpResponseException(resp);
+            return NotFound($"Fire Truck {identifier} not found");
         }
         if (fireTrucks.Count > 1)
         {
-            var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
-            {
-                Content = new StringContent($"There are several firetrucks with the same id {identifier}"),
-                ReasonPhrase = "Fire Truck ID Ambiguous"
-            };
-            throw new HttpResponseException(resp);
+            return BadRequest($"There are several firetrucks with the same id {identifier}");
         }
 
-        return fireTrucks.First();
+        return Ok(fireTrucks.First());
     }
 
-    [Microsoft.AspNetCore.Mvc.HttpGet(Name = "GetAllFireTrucks")]
-    public IEnumerable<BareFireTruck> GetAll() => _dataStorage.FireTrucks;
+    [HttpGet(Name = nameof(GetAllFireTrucks))]
+    public IEnumerable<BareFireTruck> GetAllFireTrucks() => _dataStorage.FireTrucks;
 }

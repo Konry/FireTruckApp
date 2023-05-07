@@ -1,13 +1,10 @@
 // Copyright (c) Jan Philipp Luehrig. All rights reserved.
 // These files are licensed to you under the MIT license.
 
-using FireTruckApi.DataHandling;
-using FireTruckApp.DataLoader;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Serilog;
 using Serilog.Core;
 
@@ -28,6 +25,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSingleton<IDataStorage, DataStorage>();
 builder.Services.AddSingleton<IExcelDataLoader, ExcelDataLoader>();
 builder.Services.AddHealthChecks().AddCheck<ApiHealthCheck>("Api", failureStatus: HealthStatus.Degraded);
+builder.Services.AddProblemDetails();
 
 builder.Services.AddSwaggerGen();
 
@@ -41,7 +39,14 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    app.UseDeveloperExceptionPage();
+} else
+{
+    // todo some example shows this, and some others the current included stuff, figure out how this is working
+    // app.UseExceptionHandler("/error");
 }
+app.UseExceptionHandler();
+app.UseStatusCodePages();
 
 app.UseCors(corsBuilder => corsBuilder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
@@ -51,5 +56,8 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();

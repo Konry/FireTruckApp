@@ -1,12 +1,11 @@
 // Copyright (c) Jan Philipp Luehrig. All rights reserved.
 // These files are licensed to you under the MIT license.
 
-using FireTruckApp.DataModel;
 using Newtonsoft.Json;
 
 namespace FireTruckApi.DataHandling;
 
-public class DataStorage : IDataStorage
+internal class DataStorage : IDataStorage
 {
     private static readonly string CommonAppData =
         Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);

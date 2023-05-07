@@ -2,9 +2,7 @@
 // These files are licensed to you under the MIT license.
 
 
-using System.Web.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 namespace FireTruckApi.Controllers;
 
@@ -71,7 +69,8 @@ public class FireTruckConfigurationController : ControllerBase
             Console.WriteLine(e);
             result.StatusCode = HttpStatusCode.InternalServerError;
             result.ReasonPhrase = e.Message; // Currently posting error directly, not a good case, refactor to better
-            throw new HttpResponseException(HttpStatusCode.InternalServerError);
+            // throw new HttpResponseException(HttpStatusCode.InternalServerError);
+            // todo fix to return an error here
         }
 
         return result;
