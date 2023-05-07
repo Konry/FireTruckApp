@@ -83,7 +83,7 @@ steps:
   displayName: Dotnet Run UnitTests
   inputs:
     command: test
-    projects: '**/*Test.csproj'
+    projects: '**/*.Tests.csproj'
     arguments: '--configuration $(BuildConfiguration) --collect:"XPlat Code Coverage;Format=cobertura,opencover" --filter Category!~DEV'
     
 
