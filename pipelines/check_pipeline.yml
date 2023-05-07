@@ -62,8 +62,9 @@ steps:
     scannerMode: 'MSBuild'
     projectKey: '$(sonarcloud_key)'
     extraProperties: |
-      sonar.cs.vscoveragexml.reportsPaths=$(Build.SourcesDirectory)/coverlet/reports/Cobertura.xml
-      sonar.flex.cobertura.reportPath=$(Build.SourcesDirectory)/coverlet/reports/Cobertura.xml
+      sonar.cs.vstest.reportsPaths=$(Agent.TempDirectory)/*.trx
+      sonar.cs.opencover.reportsPaths=$(Agent.TempDirectory)/*/coverage.opencover.xml
+
     #configMode: 'file'
     #scannerMode: 'CLI'
 
@@ -90,7 +91,7 @@ steps:
   inputs:
     command: test
     projects: '**/*Test.csproj'
-    arguments: '--configuration $(BuildConfiguration) /p:CoverletOutputFormat=opencover --collect:"XPlat Code Coverage" --filter Category!~DEV'
+    arguments: '--configuration $(BuildConfiguration) --collect:"XPlat Code Coverage;Format=cobertura,opencover" --filter Category!~DEV'
     
 
 - script: 'dotnet tool install --global dotnet-reportgenerator-globaltool --version 5.1.19'  
