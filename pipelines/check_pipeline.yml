@@ -62,8 +62,7 @@ steps:
     scannerMode: 'MSBuild'
     projectKey: '$(sonarcloud_key)'
     extraProperties: |
-      sonar.cs.vstest.reportsPaths=$(Agent.TempDirectory)/*.trx
-      sonar.coverageReportPaths="$(Agent.TempDirectory)/**/coverlet/reports/SonarQube.xml"
+      sonar.coverageReportPaths="$(Build.SourcesDirectory)/coverlet/reports/SonarQube.xml"
 
     #configMode: 'file'
     #scannerMode: 'CLI'
