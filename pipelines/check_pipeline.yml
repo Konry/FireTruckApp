@@ -63,8 +63,7 @@ steps:
     projectKey: '$(sonarcloud_key)'
     extraProperties: |
       sonar.cs.vstest.reportsPaths=$(Agent.TempDirectory)/*.trx
-      sonar.cs.opencover.reportsPaths=$(Agent.TempDirectory)/**/coverage.opencover.xml   
-      sonar.coverageReportPaths="$(Agent.TempDirectory)/**/coverage.sonarqube.xml"
+      sonar.coverageReportPaths="$(Agent.TempDirectory)/**/coverlet/reports/SonarQube.xml"
 
     #configMode: 'file'
     #scannerMode: 'CLI'
@@ -94,10 +93,7 @@ steps:
   
 - script: 'reportgenerator -reports:$(Agent.TempDirectory)/**/coverage.cobertura.xml -targetdir:$(Build.SourcesDirectory)/coverlet/reports -reporttypes:"Cobertura;SonarQube"'  
   displayName: 'Create Code Coverage Reports'  
-  
-- script: 'reportgenerator -reports:$(Agent.TempDirectory)/**/coverage.sonarqube.xml -targetdir:$(Build.SourcesDirectory)/coverlet/reports -reporttypes:"SonarQube"'  
-  displayName: 'Create Code Coverage Reports SonarQube'  
-  
+    
 #-------------------------------
 # Check code styles 
 #-------------------------------
