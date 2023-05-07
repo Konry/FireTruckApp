@@ -76,12 +76,6 @@ steps:
     projects: '$(solution)'
     arguments: '--configuration $(buildConfiguration)'
 
-#-------------------------------
-# Check code styles 
-#-------------------------------
-
-- task: SonarCloudAnalyze@1
-  displayName: Run static code analysis
 
 #-------------------------------
 # Run tests
@@ -103,6 +97,14 @@ steps:
   
 - script: 'reportgenerator -reports:$(Agent.TempDirectory)/**/coverage.sonarqube.xml -targetdir:$(Build.SourcesDirectory)/coverlet/reports -reporttypes:"SonarQube"'  
   displayName: 'Create Code Coverage Reports SonarQube'  
+  
+#-------------------------------
+# Check code styles 
+#-------------------------------
+
+- task: SonarCloudAnalyze@1
+  displayName: Run static code analysis
+
   
 # Publish code coverage report to the pipeline
 - task: PublishCodeCoverageResults@1
