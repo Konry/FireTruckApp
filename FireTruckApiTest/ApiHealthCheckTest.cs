@@ -1,6 +1,8 @@
 // Copyright (c) Jan Philipp Luehrig. All rights reserved.
 // These files are licensed to you under the MIT license.
 
+using FireTruckApi;
+using FireTruckApi.HealthChecks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Moq;
 

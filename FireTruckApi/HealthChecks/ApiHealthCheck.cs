@@ -1,8 +1,9 @@
 // Copyright (c) Jan Philipp Luehrig. All rights reserved.
 // These files are licensed to you under the MIT license.
 
-using System.Collections.ObjectModel;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+
+namespace FireTruckApi.HealthChecks;
 
 public class ApiHealthCheck : IHealthCheck, IHealthProvidingService
 {
@@ -50,9 +51,4 @@ public class ApiHealthCheck : IHealthCheck, IHealthProvidingService
             _healthStatus[serviceName] = status;
         }
     }
-}
-
-public interface IHealthProvidingService
-{
-    public void SetStatusOfService(string serviceName, HealthStatus status);
 }
