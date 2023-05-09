@@ -6,40 +6,42 @@ using System.Text.RegularExpressions;
 using FastExcel;
 using FireTruckApp.DataModel;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using static System.Text.RegularExpressions.Regex;
 
 [assembly: InternalsVisibleTo("FireTruckApp.DataLoader.Tests")]
 
 namespace FireTruckApp.DataLoader;
 
-public interface IExcelDataLoader
-{
-    (List<Item> Items, List<FireTruck> Trucks) LoadXlsxFile(string file, bool tabPerTruck = true);
-}
-
 public class ExcelDataLoader : IExcelDataLoader
 {
     private static readonly char[] SSplitSeparators = new List<char> {',', ';', '\n', '\r'}.ToArray();
     private readonly ILogger<ExcelDataLoader> _logger;
+    private readonly IWorksheetLoader _worksheetLoader;
 
-    public ExcelDataLoader(ILogger<ExcelDataLoader> logger)
+    public ExcelDataLoader(ILogger<ExcelDataLoader> logger, IWorksheetLoader worksheetLoader)
     {
         _logger = logger;
+        _worksheetLoader = worksheetLoader;
     }
 
     public (List<Item> Items, List<FireTruck> Trucks) LoadXlsxFile(string file, bool tabPerTruck = true)
     {
-        FileInfo inputFile = new(file);
+        _worksheetLoader.LoadFile(file);
 
         // Create an instance of Fast Excel
-        using FastExcel.FastExcel fastExcel = new(inputFile, true);
 
         List<FireTruck> fireTrucks = new();
         List<Item> items = new();
-        foreach (Worksheet? worksheet in fastExcel.Worksheets)
+        foreach (IWorksheetWrapper? worksheet in _worksheetLoader.Worksheets)
         {
             _logger.LogDebug("Worksheet Name:{Name}, Index:{TableIndex}", worksheet.Name, worksheet.Index);
             const string fireTruckPattern = @"(\d+\W\d+\W\d+)";
+
+            if (string.IsNullOrWhiteSpace(worksheet.Name))
+            {
+                _logger.LogError(EventIds.ErrorIdWorkSheetNameNotSufficient, "Skip worksheet index {Index}", worksheet.Index);
+            }
 
             MatchCollection matches = Matches(worksheet.Name, fireTruckPattern, RegexOptions.None,
                 new TimeSpan(0, 0, 3));
@@ -53,17 +55,17 @@ public class ExcelDataLoader : IExcelDataLoader
                 }
                 catch (FireTruckDataNotFoundException dtdnfou)
                 {
-                    _logger.LogError(EventIds.SErrorIdTruckDataNotFound, dtdnfou, "Skip worksheet {Name}",
+                    _logger.LogError(EventIds.ErrorIdTruckDataNotFound, dtdnfou, "Skip worksheet {Name}",
                         worksheet.Name);
                 }
                 catch (TruckAlreadyExistingException tae)
                 {
-                    _logger.LogError(EventIds.SErrorIdTruckAlreadyExists, tae,
+                    _logger.LogError(EventIds.ErrorIdTruckAlreadyExists, tae,
                         "Truck is already existing, skip {TruckName}", matches.First().Value);
                 }
                 catch (Exception e)
                 {
-                    _logger.LogCritical(EventIds.SErrorIdUnknownExceptionInExcelDataLoader, e, "Critical exception");
+                    _logger.LogCritical(EventIds.ErrorIdUnknownExceptionInExcelDataLoader, e, "Critical exception");
                     throw;
                 }
             }
@@ -77,7 +79,7 @@ public class ExcelDataLoader : IExcelDataLoader
     }
 
 
-    internal List<Item> HandleItemList(Worksheet worksheet)
+    internal List<Item> HandleItemList(IWorksheetWrapper worksheet)
     {
         List<Item> items = new();
         try
@@ -89,14 +91,14 @@ public class ExcelDataLoader : IExcelDataLoader
 
             foreach (Row row in rows)
             {
+                if (row.RowNumber == 1)
+                {
+                    continue;
+                }
+
                 Item item = new();
                 foreach (Cell cell in row.Cells)
                 {
-                    if (row.RowNumber == 1)
-                    {
-                        continue;
-                    }
-
                     if (cell.Value == null)
                     {
                         continue;
@@ -108,7 +110,8 @@ public class ExcelDataLoader : IExcelDataLoader
                             item.Identifier = (string)cell.Value;
                             break;
                         case 2:
-                            item.Weight = double.Parse((string)cell.Value);
+                            item.Weight = JsonConvert.DeserializeObject<double>(JsonConvert.SerializeObject(cell.Value));
+                            // item.Weight = double.Parse((string)cell.Value);
                             break;
                         case 3:
                             // Image
@@ -135,14 +138,14 @@ public class ExcelDataLoader : IExcelDataLoader
         }
         catch (Exception e)
         {
-            _logger.LogCritical(EventIds.SErrorIdUnknownExceptionInExcelDataLoader, e, "Critical exception");
+            _logger.LogCritical(EventIds.ErrorIdUnknownExceptionInExcelDataLoader, e, "Critical exception");
         }
 
         _logger.LogInformation("Items found {ItemCount}", items.Count);
         return items;
     }
 
-    internal FireTruck HandleFireTruck(Worksheet worksheet, ref List<FireTruck> fireTrucks)
+    internal FireTruck HandleFireTruck(IWorksheetWrapper worksheet, ref List<FireTruck> fireTrucks)
     {
         _logger.LogDebug("HandleFireTruck {WorksheetName}", worksheet.Name);
         if (string.IsNullOrWhiteSpace(worksheet.Name))
@@ -194,9 +197,9 @@ public class ExcelDataLoader : IExcelDataLoader
 
     private void HandleLocationsOfTruck(Row[] rows, FireTruck truck)
     {
-        Location currentLocation = new();
+        string currentLocationIdentifier = "";
         Dictionary<int, LocationItem> itemGlossary = new();
-        for (int index = 3; index < rows.Length; index++)
+        for (int index = 4; index < rows.Length; index++)
         {
             Row row = rows[index];
             if (!row.Cells.Any())
@@ -210,33 +213,23 @@ public class ExcelDataLoader : IExcelDataLoader
                 {
                     case 1:
                         // new Location
-                        if (!string.IsNullOrWhiteSpace(currentLocation.Identifier))
-                        {
-                            // Add current items to the location
-                            if (itemGlossary.Any())
-                            {
-                                currentLocation.Items.AddRange(
-                                    itemGlossary.Values.Where(x => !string.IsNullOrWhiteSpace(x.Identifier)));
-                            }
 
-                            truck.Locations.Add(currentLocation);
-                            currentLocation = new Location();
-                        }
+                        AddTruckItemsToTruck(ref currentLocationIdentifier, ref truck, ref itemGlossary);
+                        currentLocationIdentifier = cell.Value as string ?? "";
 
-                        currentLocation.Identifier = (string)cell.Value;
                         break;
                     case 2:
                         // Image skip
                         break;
                     case 3:
                         // Item name
-                        LocationItem item = new() {Identifier = (string)cell.Value};
+                        LocationItem item = new((string)cell.Value);
                         itemGlossary.Add(row.RowNumber, item);
 
                         break;
                     case 4:
                         // Quantity
-                        itemGlossary[row.RowNumber].Quantity = int.Parse((string)cell.Value);
+                        itemGlossary[row.RowNumber].Quantity = JsonConvert.DeserializeObject<int>(JsonConvert.SerializeObject(cell.Value));
                         break;
                     case 5:
                         // Additions to the current item
@@ -251,26 +244,24 @@ public class ExcelDataLoader : IExcelDataLoader
                 }
             }
         }
+        AddTruckItemsToTruck(ref currentLocationIdentifier, ref truck, ref itemGlossary);
     }
-}
 
-public class WorksheetNotCorrectNamedException : Exception
-{
-    public WorksheetNotCorrectNamedException() { }
-    public WorksheetNotCorrectNamedException(string message) : base(message) { }
-    public WorksheetNotCorrectNamedException(string message, Exception inner) : base(message, inner) { }
-}
+    private static void AddTruckItemsToTruck(ref string currentLocationIdentifier, ref FireTruck truck, ref Dictionary<int, LocationItem> itemGlossary)
+    {
+        if (!string.IsNullOrWhiteSpace(currentLocationIdentifier))
+        {
+            var currentLocation = new Location(currentLocationIdentifier);
 
-public class TruckAlreadyExistingException : Exception
-{
-    public TruckAlreadyExistingException() { }
-    public TruckAlreadyExistingException(string message) : base(message) { }
-    public TruckAlreadyExistingException(string message, Exception inner) : base(message, inner) { }
-}
+            // Add current items to the location
+            if (itemGlossary.Any())
+            {
+                currentLocation.Items.AddRange(itemGlossary.Values.Where(x =>
+                    !string.IsNullOrWhiteSpace(x.Identifier)));
+            }
 
-public class FireTruckDataNotFoundException : Exception
-{
-    public FireTruckDataNotFoundException() { }
-    public FireTruckDataNotFoundException(string message) : base(message) { }
-    public FireTruckDataNotFoundException(string message, Exception inner) : base(message, inner) { }
+            truck.Locations.Add(currentLocation);
+            currentLocationIdentifier = "";
+        }
+    }
 }

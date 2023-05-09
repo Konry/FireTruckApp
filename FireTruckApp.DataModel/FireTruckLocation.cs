@@ -5,5 +5,9 @@ namespace FireTruckApp.DataModel;
 
 public class FireTruckLocation
 {
+    public FireTruckLocation(string identifier)
+    {
+        Identifier = identifier;
+    }
     public string Identifier { get; set; }
 }

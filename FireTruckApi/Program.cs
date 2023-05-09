@@ -2,7 +2,6 @@
 // These files are licensed to you under the MIT license.
 
 using System.IO.Abstractions;
-using FireTruckApi;
 using FireTruckApi.HealthChecks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
@@ -26,6 +25,7 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 
+builder.Services.AddSingleton<IWorksheetLoader, WorksheetLoader>();
 builder.Services.AddSingleton<IFileSystem, FileSystem>();
 builder.Services.AddSingleton<IDataStorage, DataStorage>();
 builder.Services.AddSingleton<IExcelDataLoader, ExcelDataLoader>();

@@ -2,9 +2,7 @@
 // These files are licensed to you under the MIT license.
 
 using FireTruckApi.Controllers;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Moq;
 
 namespace FireTruckApi.Tests;
 
@@ -15,10 +13,7 @@ public class ImageControllerTest
     private ImageController _sut = null!;
 
     [SetUp]
-    public void SetUp()
-    {
-        _sut = new ImageController();
-    }
+    public void SetUp() => _sut = new ImageController();
 
     [Test]
     public void GetImage_GetEmptyFireTruckString_Returns400()
