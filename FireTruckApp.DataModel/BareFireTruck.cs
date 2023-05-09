@@ -9,24 +9,3 @@ public class BareFireTruck
     public string TruckTypeShort { get; set; }
     public string TruckType { get; set; }
 }
-
-public class FireTruck : BareFireTruck
-{
-    public FireTruck()
-    {
-        Locations = new List<Location>();
-    }
-
-    public List<Location> Locations { get; set; }
-}
-
-public class Location : FireTruckLocation
-{
-    public Location()
-    {
-        Items = new List<LocationItem>();
-    }
-
-    public string Identifier { get; set; }
-    public List<LocationItem> Items { get; set; }
-}

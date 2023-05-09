@@ -2,10 +2,9 @@
 // These files are licensed to you under the MIT license.
 
 using BaseLibrary;
-using FireTruckApp.DataLoader;
 using FireTruckApp.DataModel;
 
-namespace FireTruckApp.DataLoaderTest;
+namespace FireTruckApp.DataLoader.Tests;
 
 [TestFixture]
 public class ItemLoaderTest

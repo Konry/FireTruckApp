@@ -5,6 +5,11 @@ namespace FireTruckApp.DataModel;
 
 public class LocationItem
 {
+
+    public LocationItem(string identifier)
+    {
+        Identifier = identifier;
+    }
     public string Identifier { get; set; }
     public int Quantity { get; set; }
 

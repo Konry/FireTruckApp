@@ -1,8 +1,6 @@
 // Copyright (c) Jan Philipp Luehrig. All rights reserved.
 // These files are licensed to you under the MIT license.
 
-using FireTruckApi.DataHandling;
-using FireTruckApp.DataModel;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FireTruckApi.Controllers;

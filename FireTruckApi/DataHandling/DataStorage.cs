@@ -1,33 +1,35 @@
 // Copyright (c) Jan Philipp Luehrig. All rights reserved.
 // These files are licensed to you under the MIT license.
 
-using FireTruckApp.DataModel;
+using System.IO.Abstractions;
 using Newtonsoft.Json;
 
 namespace FireTruckApi.DataHandling;
 
-public class DataStorage : IDataStorage
+internal class DataStorage : IDataStorage
 {
-    private static readonly string commonAppData =
+    private static readonly string CommonAppData =
         Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
 
-    private static readonly string basePath =
-        $"{commonAppData}{Path.DirectorySeparatorChar}FireTruckApi{Path.DirectorySeparatorChar}";
+    private static readonly string BasePath =
+        $"{CommonAppData}{Path.DirectorySeparatorChar}FireTruckApi{Path.DirectorySeparatorChar}";
 
-    private static readonly string itemStorageFileName = "items.json";
-    private static readonly string truckStorageFileName = "trucks.json";
+    private const string ItemStorageFileName = "items.json";
+    private const string TruckStorageFileName = "trucks.json";
     private readonly ILogger<DataStorage> _logger;
+    private readonly IFileSystem _fileSystem;
 
-    public DataStorage(ILogger<DataStorage> logger)
+    public DataStorage(ILogger<DataStorage> logger, IFileSystem fileSystem)
     {
         _logger = logger;
+        _fileSystem = fileSystem;
         try
         {
             LoadFromDisk();
         }
         catch (Exception e)
         {
-            _logger.LogCritical(EventIds.s_errorIdUnknownExceptionInDataStorageInitialization, e,
+            _logger.LogCritical(EventIds.ErrorIdUnknownErrorInLoadData, e,
                 "Critical Exception in data handling");
         }
     }
@@ -42,7 +44,7 @@ public class DataStorage : IDataStorage
             Items = items;
         }
 
-        StoreToDisk(basePath, itemStorageFileName, Items);
+        StoreToDisk(BasePath, ItemStorageFileName, Items);
     }
 
     public void Update(List<FireTruck> fireTrucks)
@@ -52,25 +54,32 @@ public class DataStorage : IDataStorage
             FireTrucks = fireTrucks;
         }
 
-        StoreToDisk(basePath, truckStorageFileName, FireTrucks);
+        try
+        {
+            StoreToDisk(BasePath, TruckStorageFileName, FireTrucks);
+        }
+        catch (Exception e)
+        {
+            _logger.LogCritical(EventIds.ErrorIdUnknownErrorInStoreData, e, "Can not store data in the database");
+        }
     }
 
     private void LoadFromDisk()
     {
-        if (File.Exists(basePath + itemStorageFileName))
+        if (_fileSystem.File.Exists(BasePath + ItemStorageFileName))
         {
             List<Item>? loaded =
-                JsonConvert.DeserializeObject<List<Item>>(File.ReadAllText(basePath + itemStorageFileName));
+                JsonConvert.DeserializeObject<List<Item>>(_fileSystem.File.ReadAllText(BasePath + ItemStorageFileName));
             if (loaded != null)
             {
                 Items = loaded;
             }
         }
 
-        if (File.Exists(basePath + truckStorageFileName))
+        if (_fileSystem.File.Exists(BasePath + TruckStorageFileName))
         {
             List<FireTruck>? loaded =
-                JsonConvert.DeserializeObject<List<FireTruck>>(File.ReadAllText(basePath + truckStorageFileName));
+                JsonConvert.DeserializeObject<List<FireTruck>>(_fileSystem.File.ReadAllText(BasePath + TruckStorageFileName));
             if (loaded != null)
             {
                 FireTrucks = loaded;
@@ -81,12 +90,12 @@ public class DataStorage : IDataStorage
 
     private void StoreToDisk(string path, string filename, object obj)
     {
-        if (!Directory.Exists(path))
+        if (!_fileSystem.Directory.Exists(path))
         {
-            Directory.CreateDirectory(path);
+            _fileSystem.Directory.CreateDirectory(path);
         }
 
-        using StreamWriter file = File.CreateText(path + filename);
+        using StreamWriter file = _fileSystem.File.CreateText(path + filename);
 
         JsonSerializer serializer = new();
         serializer.Serialize(file, obj);

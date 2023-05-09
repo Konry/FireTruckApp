@@ -1,17 +1,13 @@
 // Copyright (c) Jan Philipp Luehrig. All rights reserved.
 // These files are licensed to you under the MIT license.
 
-using System.Net;
-using System.Web.Http;
-using FireTruckApi.DataHandling;
-using FireTruckApp.DataLoader;
-using FireTruckApp.DataModel;
+
 using Microsoft.AspNetCore.Mvc;
 
 namespace FireTruckApi.Controllers;
 
 [ApiController]
-[Microsoft.AspNetCore.Mvc.Route("[controller]")]
+[Route("[controller]")]
 public class FireTruckConfigurationController : ControllerBase
 {
     private const string ContentTypeOpenXml = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
@@ -28,8 +24,8 @@ public class FireTruckConfigurationController : ControllerBase
         _storage = storage;
     }
 
-    [Microsoft.AspNetCore.Mvc.HttpPost(Name = "UploadXLSX")]
-    public async Task<HttpResponseMessage> Post()
+    [HttpPost(Name = "UploadXLSX")]
+    public async Task<ActionResult<HttpResponseMessage>> Post()
     {
         HttpResponseMessage result = new() {StatusCode = HttpStatusCode.BadRequest};
 
@@ -59,7 +55,7 @@ public class FireTruckConfigurationController : ControllerBase
                 }
                 catch (Exception e)
                 {
-                    _logger.LogCritical(EventIds.s_errorIdUnknownErrorInFireTruckConfiguration, e,
+                    _logger.LogCritical(EventIds.ErrorIdUnknownErrorInFireTruckConfiguration, e,
                         "Critical exception in update storage");
                     Console.WriteLine(e);
                     throw;
@@ -72,8 +68,11 @@ public class FireTruckConfigurationController : ControllerBase
         {
             Console.WriteLine(e);
             result.StatusCode = HttpStatusCode.InternalServerError;
-            result.ReasonPhrase = e.Message; // Currently posting error directly, not a good case, refactor to better
-            throw new HttpResponseException(HttpStatusCode.InternalServerError);
+            result.ReasonPhrase = e.Message;
+            // Currently posting error directly, not a good case, refactor to better
+            // todo fix to return an error here
+            _logger.LogCritical(EventIds.ErrorIdUnknownExceptionInUploadXLSX, e, "Unknown error in exception");
+            Problem();
         }
 
         return result;
