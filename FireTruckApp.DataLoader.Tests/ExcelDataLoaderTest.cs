@@ -68,6 +68,8 @@ public class ExcelDataLoaderTest
             Assert.That(res.Identifier, Is.EqualTo("01-01-01"));
             Assert.That(res.Locations, Has.Count.EqualTo(4));
             Assert.That(res.Locations.First(x => x.Identifier == "G3").Items, Has.Count.EqualTo(2));
+            Assert.That(res.Locations.First(x => x.Identifier == "G1").Items, Has.Count.EqualTo(0));
+            Assert.That(res.Locations.First(x => x.Identifier == "G4").Items, Has.Count.EqualTo(0));
             Assert.That(res.Locations.First(x => x.Identifier == "G3").Items.First(x => x.Identifier == "B-Schlauch 20m").Quantity, Is.EqualTo(6));
         });
     }
@@ -180,7 +182,7 @@ public class ExcelDataLoaderTest
         Assert.Multiple(() =>
         {
             Assert.That(res, Is.Not.Null);
-            Assert.That(res, Has.Count.EqualTo(4));
+            Assert.That(res, Has.Count.EqualTo(4));;
         });
     }
 

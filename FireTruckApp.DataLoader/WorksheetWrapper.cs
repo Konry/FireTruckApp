@@ -37,16 +37,23 @@ public class WorksheetWrapper : IWorksheetWrapper
 public class WorksheetLoader : IWorksheetLoader
 {
     private readonly ICollection<IWorksheetWrapper> _worksheets = new List<IWorksheetWrapper>();
+    private FastExcel.FastExcel _fastExcel = null!;
 
     public void LoadFile(string file)
     {
         FileInfo inputFile = new(file);
-        using FastExcel.FastExcel fastExcel = new(inputFile, true);
+        _fastExcel = new(inputFile, true);
         _worksheets.Clear();
-        foreach (Worksheet fastExcelWorksheet in fastExcel.Worksheets)
+        foreach (Worksheet fastExcelWorksheet in _fastExcel.Worksheets)
         {
+            fastExcelWorksheet.Read();
             _worksheets.Add(new WorksheetWrapper(fastExcelWorksheet));
         }
+    }
+
+    public void Finalized()
+    {
+        _fastExcel.Dispose();
     }
 
     public IEnumerable<IWorksheetWrapper> Worksheets => _worksheets;
@@ -56,4 +63,5 @@ public interface IWorksheetLoader
 {
     public void LoadFile(string file);
     public IEnumerable<IWorksheetWrapper> Worksheets { get; }
+    public void Finalized();
 }

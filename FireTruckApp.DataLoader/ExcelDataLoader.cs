@@ -75,6 +75,7 @@ public class ExcelDataLoader : IExcelDataLoader
             }
         }
 
+        _worksheetLoader.Finalized();
         return (items, fireTrucks);
     }
 
@@ -199,9 +200,15 @@ public class ExcelDataLoader : IExcelDataLoader
     {
         string currentLocationIdentifier = "";
         Dictionary<int, LocationItem> itemGlossary = new();
-        for (int index = 4; index < rows.Length; index++)
+        for (int index = 0; index < rows.Length; index++)
         {
             Row row = rows[index];
+
+            if (row.RowNumber < 5)
+            {
+                continue;
+            }
+
             if (!row.Cells.Any())
             {
                 continue;
@@ -216,6 +223,7 @@ public class ExcelDataLoader : IExcelDataLoader
 
                         AddTruckItemsToTruck(ref currentLocationIdentifier, ref truck, ref itemGlossary);
                         currentLocationIdentifier = cell.Value as string ?? "";
+                        _logger.LogTrace("Set the current location identifier {Identifier}", currentLocationIdentifier);
 
                         break;
                     case 2:
@@ -258,6 +266,7 @@ public class ExcelDataLoader : IExcelDataLoader
             {
                 currentLocation.Items.AddRange(itemGlossary.Values.Where(x =>
                     !string.IsNullOrWhiteSpace(x.Identifier)));
+                itemGlossary.Clear();
             }
 
             truck.Locations.Add(currentLocation);
